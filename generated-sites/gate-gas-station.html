@@ -1,729 +1,264 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>GATE Gas Station | Gainesville, FL</title>
-  <style>
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
-    :root {
-      --red: #cc1f1f;
-      --red-dark: #a51717;
-      --yellow: #f5c518;
-      --yellow-light: #fde97a;
-      --charcoal: #1e1e1e;
-      --dark-gray: #2c2c2c;
-      --mid-gray: #444;
-      --light-gray: #f4f4f4;
-      --white: #ffffff;
-      --text: #1e1e1e;
-      --text-light: #555;
-    }
-
-    html { scroll-behavior: smooth; }
-
-    body {
-      font-family: 'Segoe UI', Arial, sans-serif;
-      color: var(--text);
-      background: var(--white);
-      line-height: 1.65;
-    }
-
-    /* ── NAV ── */
-    nav {
-      position: fixed;
-      top: 0;
-      left: 0;
-      right: 0;
-      z-index: 100;
-      background: var(--charcoal);
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 0 1.5rem;
-      height: 62px;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.45);
-    }
-
-    .nav-brand {
-      display: flex;
-      align-items: center;
-      gap: 0.6rem;
-      text-decoration: none;
-    }
-
-    .nav-logo {
-      width: 38px;
-      height: 38px;
-      background: var(--red);
-      border-radius: 6px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 1.1rem;
-      font-weight: 900;
-      color: var(--white);
-      letter-spacing: -1px;
-      flex-shrink: 0;
-    }
-
-    .nav-name {
-      color: var(--white);
-      font-size: 1.05rem;
-      font-weight: 700;
-      letter-spacing: 0.02em;
-    }
-
-    .nav-links {
-      display: flex;
-      gap: 1.6rem;
-      list-style: none;
-    }
-
-    .nav-links a {
-      color: #ccc;
-      text-decoration: none;
-      font-size: 0.88rem;
-      font-weight: 500;
-      letter-spacing: 0.04em;
-      text-transform: uppercase;
-      transition: color 0.2s;
-    }
-
-    .nav-links a:hover { color: var(--yellow); }
-
-    /* hamburger */
-    .hamburger {
-      display: none;
-      flex-direction: column;
-      gap: 5px;
-      background: none;
-      border: none;
-      cursor: pointer;
-      padding: 4px;
-    }
-    .hamburger span {
-      display: block;
-      width: 24px;
-      height: 2px;
-      background: var(--white);
-      border-radius: 2px;
-      transition: all 0.25s;
-    }
-
-    /* ── HERO ── */
-    .hero {
-      margin-top: 62px;
-      background: linear-gradient(135deg, var(--charcoal) 0%, var(--dark-gray) 50%, #111 100%);
-      min-height: 480px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      position: relative;
-      overflow: hidden;
-      text-align: center;
-      padding: 4rem 1.5rem;
-    }
-
-    /* decorative accent stripes */
-    .hero::before {
-      content: '';
-      position: absolute;
-      top: 0; left: 0; right: 0;
-      height: 6px;
-      background: linear-gradient(90deg, var(--red) 0%, var(--yellow) 50%, var(--red) 100%);
-    }
-
-    .hero-content {
-      position: relative;
-      z-index: 1;
-      max-width: 680px;
-    }
-
-    .hero-badge {
-      display: inline-block;
-      background: var(--red);
-      color: var(--white);
-      font-size: 0.75rem;
-      font-weight: 700;
-      letter-spacing: 0.12em;
-      text-transform: uppercase;
-      padding: 0.3rem 0.9rem;
-      border-radius: 3px;
-      margin-bottom: 1.2rem;
-    }
-
-    .hero h1 {
-      font-size: clamp(2rem, 5vw, 3.2rem);
-      font-weight: 900;
-      color: var(--white);
-      line-height: 1.15;
-      margin-bottom: 1rem;
-      letter-spacing: -0.01em;
-    }
-
-    .hero h1 span { color: var(--yellow); }
-
-    .hero p {
-      font-size: clamp(1rem, 2.5vw, 1.2rem);
-      color: #bbb;
-      margin-bottom: 2rem;
-      max-width: 480px;
-      margin-left: auto;
-      margin-right: auto;
-    }
-
-    .hero-cta {
-      display: inline-block;
-      background: var(--red);
-      color: var(--white);
-      text-decoration: none;
-      font-weight: 700;
-      font-size: 0.95rem;
-      padding: 0.85rem 2rem;
-      border-radius: 4px;
-      letter-spacing: 0.04em;
-      transition: background 0.2s, transform 0.15s;
-    }
-    .hero-cta:hover { background: var(--red-dark); transform: translateY(-2px); }
-
-    /* ── SECTIONS ── */
-    section { padding: 5rem 1.5rem; }
-
-    .container {
-      max-width: 1060px;
-      margin: 0 auto;
-    }
-
-    .section-label {
-      display: block;
-      font-size: 0.72rem;
-      font-weight: 700;
-      letter-spacing: 0.15em;
-      text-transform: uppercase;
-      color: var(--red);
-      margin-bottom: 0.6rem;
-    }
-
-    .section-title {
-      font-size: clamp(1.6rem, 3.5vw, 2.2rem);
-      font-weight: 800;
-      color: var(--charcoal);
-      margin-bottom: 1.2rem;
-      line-height: 1.2;
-    }
-
-    /* ── ABOUT ── */
-    #about {
-      background: var(--light-gray);
-    }
-
-    .about-inner {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 3.5rem;
-      align-items: center;
-    }
-
-    .about-text p {
-      color: var(--text-light);
-      font-size: 1rem;
-      margin-bottom: 1rem;
-    }
-
-    .about-visual {
-      background: var(--charcoal);
-      border-radius: 10px;
-      min-height: 260px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      position: relative;
-      overflow: hidden;
-    }
-
-    .about-visual::before {
-      content: '';
-      position: absolute;
-      inset: 0;
-      background: repeating-linear-gradient(
-        -45deg,
-        rgba(245,197,24,0.07) 0px,
-        rgba(245,197,24,0.07) 2px,
-        transparent 2px,
-        transparent 18px
-      );
-    }
-
-    .about-icon {
-      font-size: 5rem;
-      position: relative;
-      z-index: 1;
-      filter: drop-shadow(0 2px 8px rgba(0,0,0,0.5));
-    }
-
-    /* ── SERVICES ── */
-    #services {
-      background: var(--white);
-    }
-
-    .services-header {
-      text-align: center;
-      margin-bottom: 3rem;
-    }
-
-    .services-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(270px, 1fr));
-      gap: 1.5rem;
-    }
-
-    .service-card {
-      background: var(--light-gray);
-      border-radius: 8px;
-      padding: 1.8rem 1.5rem;
-      border-left: 4px solid var(--red);
-      transition: transform 0.2s, box-shadow 0.2s;
-    }
-
-    .service-card:hover {
-      transform: translateY(-3px);
-      box-shadow: 0 8px 24px rgba(0,0,0,0.1);
-    }
-
-    .service-icon {
-      font-size: 2rem;
-      margin-bottom: 0.8rem;
-    }
-
-    .service-card h3 {
-      font-size: 1.05rem;
-      font-weight: 700;
-      color: var(--charcoal);
-      margin-bottom: 0.4rem;
-    }
-
-    .service-card p {
-      font-size: 0.88rem;
-      color: var(--text-light);
-    }
-
-    /* ── CONTACT ── */
-    #contact {
-      background: var(--charcoal);
-      color: var(--white);
-    }
-
-    #contact .section-title { color: var(--white); }
-    #contact .section-label { color: var(--yellow); }
-
-    .contact-inner {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 3.5rem;
-      align-items: start;
-    }
-
-    .contact-info {
-      display: flex;
-      flex-direction: column;
-      gap: 1.4rem;
-    }
-
-    .contact-row {
-      display: flex;
-      align-items: flex-start;
-      gap: 1rem;
-    }
-
-    .contact-icon {
-      width: 40px;
-      height: 40px;
-      background: var(--red);
-      border-radius: 6px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 1.1rem;
-      flex-shrink: 0;
-    }
-
-    .contact-row-text strong {
-      display: block;
-      font-size: 0.78rem;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-      color: #aaa;
-      margin-bottom: 0.15rem;
-    }
-
-    .contact-row-text span, .contact-row-text a {
-      font-size: 1rem;
-      color: var(--white);
-      text-decoration: none;
-    }
-
-    .contact-row-text a:hover { color: var(--yellow); }
-
-    /* rating */
-    .rating-box {
-      background: var(--dark-gray);
-      border-radius: 8px;
-      padding: 1.2rem 1.4rem;
-      display: flex;
-      align-items: center;
-      gap: 1rem;
-    }
-
-    .rating-score {
-      font-size: 2.4rem;
-      font-weight: 900;
-      color: var(--yellow);
-      line-height: 1;
-    }
-
-    .stars {
-      display: flex;
-      gap: 2px;
-      margin-bottom: 0.25rem;
-    }
-
-    .star {
-      width: 16px;
-      height: 16px;
-      position: relative;
-      display: inline-block;
-    }
-
-    .star svg { width: 100%; height: 100%; }
-
-    .rating-meta {
-      font-size: 0.82rem;
-      color: #aaa;
-    }
-
-    /* map card */
-    .map-card {
-      background: var(--dark-gray);
-      border-radius: 8px;
-      overflow: hidden;
-    }
-
-    .map-placeholder {
-      background: #333;
-      height: 200px;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      gap: 0.5rem;
-      color: #888;
-      font-size: 0.9rem;
-    }
-
-    .map-placeholder-icon { font-size: 2.2rem; }
-
-    .map-card-footer {
-      padding: 1.2rem;
-      display: flex;
-      gap: 1rem;
-      flex-wrap: wrap;
-    }
-
-    .btn-directions {
-      display: inline-flex;
-      align-items: center;
-      gap: 0.5rem;
-      background: var(--yellow);
-      color: var(--charcoal);
-      text-decoration: none;
-      font-weight: 700;
-      font-size: 0.88rem;
-      padding: 0.7rem 1.3rem;
-      border-radius: 4px;
-      letter-spacing: 0.03em;
-      transition: background 0.2s, transform 0.15s;
-    }
-
-    .btn-directions:hover { background: var(--yellow-light); transform: translateY(-2px); }
-
-    .btn-call {
-      display: inline-flex;
-      align-items: center;
-      gap: 0.5rem;
-      background: transparent;
-      color: var(--white);
-      text-decoration: none;
-      font-weight: 700;
-      font-size: 0.88rem;
-      padding: 0.7rem 1.3rem;
-      border-radius: 4px;
-      border: 2px solid #555;
-      letter-spacing: 0.03em;
-      transition: border-color 0.2s, color 0.2s;
-    }
-
-    .btn-call:hover { border-color: var(--yellow); color: var(--yellow); }
-
-    /* ── FOOTER ── */
-    footer {
-      background: #111;
-      color: #666;
-      text-align: center;
-      padding: 1.6rem 1.5rem;
-      font-size: 0.82rem;
-    }
-
-    footer a { color: #888; text-decoration: none; }
-    footer a:hover { color: var(--yellow); }
-
-    /* ── RESPONSIVE ── */
-    @media (max-width: 768px) {
-      .nav-links { display: none; }
-      .nav-links.open {
-        display: flex;
-        flex-direction: column;
-        position: absolute;
-        top: 62px;
-        left: 0; right: 0;
-        background: var(--charcoal);
-        padding: 1rem 1.5rem 1.5rem;
-        gap: 1rem;
-        box-shadow: 0 4px 12px rgba(0,0,0,0.4);
-      }
-      .hamburger { display: flex; }
-
-      .about-inner,
-      .contact-inner {
-        grid-template-columns: 1fr;
-      }
-
-      .about-visual { min-height: 180px; }
-    }
-
-    @media (max-width: 480px) {
-      section { padding: 3.5rem 1rem; }
-      .hero { padding: 3rem 1rem; min-height: 380px; }
-    }
-  </style>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>GATE Gas Station | Gainesville, FL</title>
+<style>
+  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+  :root{
+    --navy:#0a0e27;
+    --navy2:#12193f;
+    --cyan:#00e5ff;
+    --orange:#ff6b1a;
+    --orange2:#ffb020;
+    --white:#f4f9ff;
+    --muted:#9fb0d8;
+  }
+  html{scroll-behavior:smooth}
+  body{font-family:"Segoe UI",system-ui,Arial,sans-serif;background:var(--navy);color:var(--white);line-height:1.6;overflow-x:hidden}
+
+  nav{position:fixed;top:0;left:0;right:0;z-index:50;display:flex;align-items:center;justify-content:space-between;
+    padding:.8rem 1.5rem;background:rgba(10,14,39,.72);backdrop-filter:blur(12px);
+    border-bottom:1px solid rgba(0,229,255,.25)}
+  .brand{display:flex;align-items:center;gap:.6rem;text-decoration:none}
+  .logo{width:38px;height:38px;display:grid;place-items:center;font-weight:900;color:var(--navy);
+    background:linear-gradient(135deg,var(--cyan),var(--orange2));border-radius:10px;font-size:1.1rem}
+  .brand b{color:var(--white);font-weight:800;letter-spacing:1px}
+  .nav-links{display:flex;gap:1.5rem;list-style:none}
+  .nav-links a{color:var(--muted);text-decoration:none;font-weight:600;font-size:.9rem;transition:color .2s}
+  .nav-links a:hover{color:var(--cyan)}
+  .burger{display:none;flex-direction:column;gap:5px;background:none;border:0;cursor:pointer;padding:6px}
+  .burger span{width:26px;height:3px;background:var(--cyan);border-radius:3px}
+
+  /* full-bleed canvas hero */
+  .hero{position:relative;height:100vh;min-height:560px;display:grid;place-items:center;text-align:center;overflow:hidden}
+  #fx{position:absolute;inset:0;width:100%;height:100%;z-index:0}
+  .hero::after{content:"";position:absolute;inset:0;z-index:1;pointer-events:none;
+    background:radial-gradient(circle at 50% 60%,transparent 30%,rgba(10,14,39,.85) 100%)}
+  .hero-content{position:relative;z-index:2;padding:1.5rem;max-width:900px}
+  .pill{display:inline-block;font-size:.75rem;font-weight:800;letter-spacing:2px;text-transform:uppercase;
+    color:var(--navy);background:var(--cyan);padding:.35rem 1rem;border-radius:999px;margin-bottom:1.2rem}
+  .hero h1{font-size:clamp(2.6rem,9vw,6rem);font-weight:900;line-height:.95;letter-spacing:-2px;
+    text-shadow:0 0 40px rgba(0,229,255,.4)}
+  .hero h1 span{background:linear-gradient(90deg,var(--orange),var(--orange2),var(--cyan));
+    -webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;color:transparent;
+    background-size:200% auto;animation:sheen 5s linear infinite}
+  @keyframes sheen{to{background-position:200% center}}
+  .hero p{color:#cfe0ff;font-size:clamp(1rem,2.2vw,1.35rem);margin:1.3rem auto 2rem;max-width:32ch}
+  .hero-cta{display:inline-block;text-decoration:none;font-weight:800;color:var(--navy);
+    background:var(--orange);padding:1rem 2.4rem;border-radius:14px;
+    box-shadow:0 10px 30px rgba(255,107,26,.5);transition:transform .18s,box-shadow .18s}
+  .hero-cta:hover{transform:translateY(-3px);box-shadow:0 16px 40px rgba(255,107,26,.6)}
+  .scroll-cue{position:absolute;bottom:1.6rem;left:50%;transform:translateX(-50%);z-index:2;color:var(--cyan);
+    font-size:.75rem;letter-spacing:2px;text-transform:uppercase;animation:bob 1.8s ease-in-out infinite}
+  @keyframes bob{50%{transform:translate(-50%,8px)}}
+
+  section{padding:5rem 1.5rem}
+  .wrap{max-width:1080px;margin:0 auto}
+  .label{display:inline-block;font-size:.72rem;font-weight:800;letter-spacing:3px;text-transform:uppercase;color:var(--cyan)}
+  .h2{font-size:clamp(1.8rem,4.5vw,3rem);font-weight:900;line-height:1.05;margin:.5rem 0 1rem}
+
+  /* stat strip */
+  .strip{background:linear-gradient(90deg,var(--orange),var(--orange2));color:var(--navy)}
+  .strip .wrap{display:flex;flex-wrap:wrap;justify-content:space-around;gap:1.5rem;text-align:center}
+  .strip .stat b{display:block;font-size:2.6rem;font-weight:900;line-height:1}
+  .strip .stat span{font-weight:700;font-size:.85rem;text-transform:uppercase;letter-spacing:1px}
+
+  .about{background:var(--navy2)}
+  .about-grid{display:grid;grid-template-columns:1.4fr 1fr;gap:2.5rem;align-items:center;margin-top:1rem}
+  .about-grid p{color:#c6d5f5;margin-bottom:1rem}
+  .about-badge{aspect-ratio:1;border-radius:24px;background:
+    radial-gradient(circle at 30% 30%,rgba(0,229,255,.35),transparent 60%),var(--navy);
+    border:2px solid rgba(0,229,255,.3);display:grid;place-items:center;font-size:6rem;
+    box-shadow:inset 0 0 60px rgba(0,229,255,.15)}
+
+  /* offerings: numbered pump-station list */
+  .pumps{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-top:1.6rem;counter-reset:p}
+  .pump{position:relative;background:var(--navy2);border-left:4px solid var(--orange);border-radius:12px;
+    padding:1.4rem 1.4rem 1.4rem 4.4rem;transition:opacity .6s,transform .6s}
+  .pump.hide{opacity:0;transform:translateX(-24px)}
+  .pump::before{counter-increment:p;content:"0" counter(p);position:absolute;left:1.1rem;top:1.1rem;
+    font-size:1.3rem;font-weight:900;color:var(--cyan);opacity:.7}
+  .pump .em{font-size:1.5rem;position:absolute;left:1rem;bottom:1rem}
+  .pump h3{font-size:1.15rem;font-weight:800;margin-bottom:.3rem;padding-left:1.4rem}
+  .pump p{color:var(--muted);font-size:.92rem;padding-left:1.4rem}
+
+  /* contact */
+  .contact{background:var(--navy)}
+  .contact-grid{display:grid;grid-template-columns:1fr 1fr;gap:2rem;margin-top:1.5rem}
+  .info .row{display:flex;gap:1rem;align-items:flex-start;margin-bottom:1.3rem}
+  .info .ic{width:44px;height:44px;flex-shrink:0;border-radius:12px;display:grid;place-items:center;
+    background:rgba(0,229,255,.12);border:1px solid rgba(0,229,255,.3);font-size:1.2rem}
+  .info b{display:block;font-size:.72rem;text-transform:uppercase;letter-spacing:1px;color:var(--cyan)}
+  .info a{color:var(--white);text-decoration:none;font-weight:700}
+  .info a:hover{color:var(--orange2)}
+  .rating{display:flex;align-items:center;gap:1rem;background:var(--navy2);border:1px solid rgba(255,107,26,.35);
+    border-radius:14px;padding:1.2rem 1.4rem;margin-top:.5rem}
+  .rating .score{font-size:2.6rem;font-weight:900;color:var(--orange2);line-height:1}
+  .rating .rstars{color:var(--orange2);font-size:1.2rem;letter-spacing:2px}
+  .rating small{color:var(--muted)}
+  .mapcard{background:var(--navy2);border-radius:18px;overflow:hidden;border:1px solid rgba(0,229,255,.2);display:flex;flex-direction:column}
+  .mapface{flex:1;min-height:220px;display:grid;place-items:center;gap:.6rem;text-align:center;padding:1.5rem;
+    background:
+      repeating-linear-gradient(90deg,rgba(0,229,255,.06) 0 1px,transparent 1px 40px),
+      repeating-linear-gradient(0deg,rgba(0,229,255,.06) 0 1px,transparent 1px 40px),var(--navy)}
+  .mapface .mp{font-size:3rem}
+  .mapfoot{display:flex;gap:.8rem;padding:1rem;flex-wrap:wrap}
+  .btn-dir,.btn-call{flex:1;text-align:center;text-decoration:none;font-weight:800;padding:.9rem 1rem;border-radius:12px;transition:transform .15s}
+  .btn-dir{background:var(--orange);color:var(--navy)}
+  .btn-call{background:transparent;border:2px solid var(--cyan);color:var(--cyan)}
+  .btn-dir:hover,.btn-call:hover{transform:translateY(-2px)}
+
+  footer{background:var(--navy2);text-align:center;padding:2rem 1.5rem;color:var(--muted);font-size:.85rem}
+  footer a{color:var(--cyan);text-decoration:none}
+
+  @media(max-width:820px){.about-grid,.contact-grid{grid-template-columns:1fr}.pumps{grid-template-columns:1fr}}
+  @media(max-width:760px){
+    .nav-links{position:absolute;top:100%;left:0;right:0;flex-direction:column;background:var(--navy);padding:1rem 1.5rem;display:none}
+    .nav-links.open{display:flex}.burger{display:flex}
+  }
+  @media(prefers-reduced-motion:reduce){
+    html{scroll-behavior:auto}
+    .hero h1 span,.scroll-cue{animation:none}
+    .pump{transition:none}
+    .pump.hide{opacity:1;transform:none}
+  }
+</style>
 </head>
 <body>
 
-  <!-- NAV -->
-  <nav id="top-nav">
-    <a href="#" class="nav-brand" aria-label="GATE Gas Station home">
-      <div class="nav-logo">G</div>
-      <span class="nav-name">GATE Gas Station</span>
-    </a>
-    <ul class="nav-links" id="nav-menu">
-      <li><a href="#about">About</a></li>
-      <li><a href="#services">Services</a></li>
-      <li><a href="#contact">Contact</a></li>
-    </ul>
-    <button class="hamburger" id="hamburger-btn" aria-label="Toggle navigation" aria-expanded="false">
-      <span></span><span></span><span></span>
-    </button>
-  </nav>
+<nav>
+  <a href="#top" class="brand"><span class="logo">G</span><b>GATE Gas Station</b></a>
+  <ul class="nav-links" id="navLinks">
+    <li><a href="#about">About</a></li>
+    <li><a href="#offer">Products</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+  <button class="burger" id="burger" aria-label="Toggle navigation"><span></span><span></span><span></span></button>
+</nav>
 
-  <!-- HERO -->
-  <section class="hero" id="home">
-    <div class="hero-content">
-      <span class="hero-badge">Gainesville, FL</span>
-      <h1>Your <span>Go-To Stop</span><br>On NW 13th St</h1>
-      <p>Fueling up made easy — gas, snacks, and everyday essentials right in your neighborhood.</p>
-      <a href="#contact" class="hero-cta">Find Us</a>
+<header class="hero" id="top">
+  <canvas id="fx"></canvas>
+  <div class="hero-content">
+    <span class="pill">Gainesville, FL · NW 13th St</span>
+    <h1>YOUR <span>GO-TO STOP</span></h1>
+    <p>Fueling up made easy — gas, snacks, and everyday essentials right in your neighborhood.</p>
+    <a href="#contact" class="hero-cta">Find Us &rarr;</a>
+  </div>
+  <div class="scroll-cue">Scroll ↓</div>
+</header>
+
+<section class="strip">
+  <div class="wrap">
+    <div class="stat"><b data-count="3.5" data-dec="1">3.5</b><span>Google Rating</span></div>
+    <div class="stat"><b data-count="57">57</b><span>Reviews</span></div>
+    <div class="stat"><b>24/7</b><span>On NW 13th St</span></div>
+  </div>
+</section>
+
+<section class="about" id="about">
+  <div class="wrap">
+    <span class="label">About Us</span>
+    <h2 class="h2">A Neighborhood Convenience Store</h2>
+    <div class="about-grid">
+      <div>
+        <p>GATE Gas Station on NW 13th Street is a convenient fuel and shopping stop serving the Gainesville community. Whether you're commuting across town or just need a quick pick-me-up, we're here to make your stop fast and easy.</p>
+        <p>Stocked with a wide selection of beverages, snacks, and household essentials, our store is designed with your busy day in mind. We take pride in keeping things simple, accessible, and ready when you need them.</p>
+      </div>
+      <div class="about-badge">⛽</div>
     </div>
-  </section>
+  </div>
+</section>
 
-  <!-- ABOUT -->
-  <section id="about">
-    <div class="container">
-      <div class="about-inner">
-        <div class="about-text">
-          <span class="section-label">About Us</span>
-          <h2 class="section-title">A Neighborhood Convenience Store</h2>
-          <p>GATE Gas Station on NW 13th Street is a convenient fuel and shopping stop serving the Gainesville community. Whether you're commuting across town or just need a quick pick-me-up, we're here to make your stop fast and easy.</p>
-          <p>Stocked with a wide selection of beverages, snacks, and household essentials, our store is designed with your busy day in mind. We take pride in keeping things simple, accessible, and ready when you need them.</p>
+<section id="offer">
+  <div class="wrap">
+    <span class="label">What We Offer</span>
+    <h2 class="h2">Services &amp; Products</h2>
+    <div class="pumps">
+      <div class="pump"><span class="em">⛽</span><h3>Fuel &amp; Gas</h3><p>Regular, mid-grade, and premium fuel options to keep you moving. Contact us for current pricing.</p></div>
+      <div class="pump"><span class="em">🛒</span><h3>Convenience Store</h3><p>Snacks, beverages, candy, chips, and everyday grab-and-go items stocked for your convenience.</p></div>
+      <div class="pump"><span class="em">☕</span><h3>Hot &amp; Cold Drinks</h3><p>Freshly brewed coffee, fountain drinks, energy drinks, and cold beverages available daily.</p></div>
+      <div class="pump"><span class="em">🧴</span><h3>Household Essentials</h3><p>Basic personal care and household products for those times you need something in a pinch.</p></div>
+      <div class="pump"><span class="em">💳</span><h3>ATM Services</h3><p>On-site ATM access for your banking needs while you shop. Contact us for details.</p></div>
+      <div class="pump"><span class="em">🚗</span><h3>Automotive Basics</h3><p>Motor oil, windshield washer fluid, and other essential automotive products available in store.</p></div>
+    </div>
+  </div>
+</section>
+
+<section class="contact" id="contact">
+  <div class="wrap">
+    <span class="label">Get In Touch</span>
+    <h2 class="h2">Find Us on NW 13th St</h2>
+    <div class="contact-grid">
+      <div class="info">
+        <div class="row"><div class="ic">📍</div><div><b>Address</b><span>506 NW 13th St, Gainesville, FL</span></div></div>
+        <div class="row"><div class="ic">📞</div><div><b>Phone</b><a href="tel:+13523765444">(352) 376-5444</a></div></div>
+        <div class="row"><div class="ic">🕐</div><div><b>Hours</b><span>Contact us for hours of operation</span></div></div>
+        <div class="rating">
+          <div class="score">3.5</div>
+          <div><div class="rstars">&#9733;&#9733;&#9733;&#9733;&#9734;</div><small>Google Maps &bull; 57 reviews</small></div>
         </div>
-        <div class="about-visual">
-          <div class="about-icon">⛽</div>
+      </div>
+      <div class="mapcard">
+        <div class="mapface"><div class="mp">🗺️</div><div>506 NW 13th St, Gainesville, FL</div></div>
+        <div class="mapfoot">
+          <a href="https://www.google.com/maps/search/GATE%20Gas%20Station%20506%20NW%2013th%20St" target="_blank" rel="noopener noreferrer" class="btn-dir">&#9654; Get Directions</a>
+          <a href="tel:+13523765444" class="btn-call">&#128222; Call Us</a>
         </div>
       </div>
     </div>
-  </section>
+  </div>
+</section>
 
-  <!-- SERVICES -->
-  <section id="services">
-    <div class="container">
-      <div class="services-header">
-        <span class="section-label">What We Offer</span>
-        <h2 class="section-title">Services &amp; Products</h2>
-      </div>
-      <div class="services-grid">
+<footer>
+  <p>&copy; 2026 GATE Gas Station &bull; 506 NW 13th St, Gainesville, FL &bull; <a href="tel:+13523765444">(352) 376-5444</a></p>
+</footer>
 
-        <div class="service-card">
-          <div class="service-icon">⛽</div>
-          <h3>Fuel &amp; Gas</h3>
-          <p>Regular, mid-grade, and premium fuel options to keep you moving. Contact us for current pricing.</p>
-        </div>
+<script>
+(function(){
+  var burger=document.getElementById('burger'),links=document.getElementById('navLinks');
+  burger.addEventListener('click',function(){links.classList.toggle('open');});
+  links.querySelectorAll('a').forEach(function(a){a.addEventListener('click',function(){links.classList.remove('open');});});
 
-        <div class="service-card">
-          <div class="service-icon">🛒</div>
-          <h3>Convenience Store</h3>
-          <p>Snacks, beverages, candy, chips, and everyday grab-and-go items stocked for your convenience.</p>
-        </div>
+  var reduce=window.matchMedia('(prefers-reduced-motion:reduce)').matches;
 
-        <div class="service-card">
-          <div class="service-icon">☕</div>
-          <h3>Hot &amp; Cold Drinks</h3>
-          <p>Freshly brewed coffee, fountain drinks, energy drinks, and cold beverages available daily.</p>
-        </div>
+  // canvas particle field (rising fuel sparks)
+  var cv=document.getElementById('fx'),ctx=cv.getContext('2d'),parts=[],raf,W,H;
+  function size(){W=cv.width=cv.offsetWidth;H=cv.height=cv.offsetHeight;}
+  function mk(){return{x:Math.random()*W,y:H+Math.random()*H,r:Math.random()*2.5+.6,
+    v:Math.random()*.8+.3,c:Math.random()<.5?'0,229,255':'255,107,26',a:Math.random()*.5+.25};}
+  function init(){size();parts=[];var n=Math.min(90,Math.floor(W/14));for(var i=0;i<n;i++){var p=mk();p.y=Math.random()*H;parts.push(p);}}
+  function frame(){
+    ctx.clearRect(0,0,W,H);
+    for(var i=0;i<parts.length;i++){var p=parts[i];p.y-=p.v;if(p.y<-10){parts[i]=mk();}
+      ctx.beginPath();ctx.arc(p.x,p.y,p.r,0,6.283);ctx.fillStyle='rgba('+p.c+','+p.a+')';ctx.fill();}
+    raf=requestAnimationFrame(frame);
+  }
+  function drawStatic(){size();ctx.clearRect(0,0,W,H);for(var i=0;i<40;i++){ctx.beginPath();
+    ctx.arc(Math.random()*W,Math.random()*H,Math.random()*2+.6,0,6.283);
+    ctx.fillStyle='rgba(0,229,255,.25)';ctx.fill();}}
+  if(reduce){drawStatic();}
+  else{init();frame();window.addEventListener('resize',init);}
 
-        <div class="service-card">
-          <div class="service-icon">🧴</div>
-          <h3>Household Essentials</h3>
-          <p>Basic personal care and household products for those times you need something in a pinch.</p>
-        </div>
+  // counters
+  function run(el){var t=parseFloat(el.dataset.count),dec=parseInt(el.dataset.dec||0),s=null,d=1200;
+    function step(ts){if(!s)s=ts;var p=Math.min((ts-s)/d,1);el.textContent=(t*p).toFixed(dec);
+      if(p<1)requestAnimationFrame(step);else el.textContent=t.toFixed(dec);}requestAnimationFrame(step);}
+  var counters=document.querySelectorAll('[data-count]');
+  if(reduce){counters.forEach(function(el){el.textContent=parseFloat(el.dataset.count).toFixed(parseInt(el.dataset.dec||0));});}
+  else{var co=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting){run(e.target);co.unobserve(e.target);}});},{threshold:.6});
+    counters.forEach(function(el){co.observe(el);});}
 
-        <div class="service-card">
-          <div class="service-icon">💳</div>
-          <h3>ATM Services</h3>
-          <p>On-site ATM access for your banking needs while you shop. Contact us for details.</p>
-        </div>
-
-        <div class="service-card">
-          <div class="service-icon">🚗</div>
-          <h3>Automotive Basics</h3>
-          <p>Motor oil, windshield washer fluid, and other essential automotive products available in store.</p>
-        </div>
-
-      </div>
-    </div>
-  </section>
-
-  <!-- CONTACT -->
-  <section id="contact">
-    <div class="container">
-      <div class="contact-inner">
-        <div>
-          <span class="section-label">Get In Touch</span>
-          <h2 class="section-title">Find Us on NW 13th St</h2>
-
-          <div class="contact-info">
-            <div class="contact-row">
-              <div class="contact-icon">📍</div>
-              <div class="contact-row-text">
-                <strong>Address</strong>
-                <span>506 NW 13th St, Gainesville, FL</span>
-              </div>
-            </div>
-
-            <div class="contact-row">
-              <div class="contact-icon">📞</div>
-              <div class="contact-row-text">
-                <strong>Phone</strong>
-                <a href="tel:+13523765444">(352) 376-5444</a>
-              </div>
-            </div>
-
-            <div class="contact-row">
-              <div class="contact-icon">🕐</div>
-              <div class="contact-row-text">
-                <strong>Hours</strong>
-                <span>Contact us for hours of operation</span>
-              </div>
-            </div>
-
-            <!-- Rating -->
-            <div class="rating-box">
-              <div class="rating-score">3.5</div>
-              <div>
-                <div class="stars" aria-label="3.5 out of 5 stars">
-                  <!-- star 1 -->
-                  <span class="star">
-                    <svg viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
-                      <polygon points="10,1 12.9,7 19.5,7.6 14.5,12 16.2,18.5 10,15 3.8,18.5 5.5,12 0.5,7.6 7.1,7" fill="#f5c518"/>
-                    </svg>
-                  </span>
-                  <!-- star 2 -->
-                  <span class="star">
-                    <svg viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
-                      <polygon points="10,1 12.9,7 19.5,7.6 14.5,12 16.2,18.5 10,15 3.8,18.5 5.5,12 0.5,7.6 7.1,7" fill="#f5c518"/>
-                    </svg>
-                  </span>
-                  <!-- star 3 -->
-                  <span class="star">
-                    <svg viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
-                      <polygon points="10,1 12.9,7 19.5,7.6 14.5,12 16.2,18.5 10,15 3.8,18.5 5.5,12 0.5,7.6 7.1,7" fill="#f5c518"/>
-                    </svg>
-                  </span>
-                  <!-- half star 4 -->
-                  <span class="star">
-                    <svg viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
-                      <defs>
-                        <linearGradient id="half1">
-                          <stop offset="50%" stop-color="#f5c518"/>
-                          <stop offset="50%" stop-color="#555"/>
-                        </linearGradient>
-                      </defs>
-                      <polygon points="10,1 12.9,7 19.5,7.6 14.5,12 16.2,18.5 10,15 3.8,18.5 5.5,12 0.5,7.6 7.1,7" fill="url(#half1)"/>
-                    </svg>
-                  </span>
-                  <!-- star 5 empty -->
-                  <span class="star">
-                    <svg viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
-                      <polygon points="10,1 12.9,7 19.5,7.6 14.5,12 16.2,18.5 10,15 3.8,18.5 5.5,12 0.5,7.6 7.1,7" fill="#555"/>
-                    </svg>
-                  </span>
-                </div>
-                <div class="rating-meta">Google Maps &bull; 57 reviews</div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- Map / Directions -->
-        <div class="map-card">
-          <div class="map-placeholder">
-            <div class="map-placeholder-icon">🗺️</div>
-            <div>506 NW 13th St, Gainesville, FL</div>
-          </div>
-          <div class="map-card-footer">
-            <a href="https://www.google.com/maps/search/GATE%20Gas%20Station%20506%20NW%2013th%20St"
-               target="_blank" rel="noopener noreferrer" class="btn-directions">
-              &#9654; Get Directions
-            </a>
-            <a href="tel:+13523765444" class="btn-call">
-              &#128222; Call Us
-            </a>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- FOOTER -->
-  <footer>
-    <p>&copy; 2026 GATE Gas Station &bull; 506 NW 13th St, Gainesville, FL &bull; <a href="tel:+13523765444">(352) 376-5444</a></p>
-  </footer>
-
-  <script>
-    // Mobile nav toggle
-    const btn = document.getElementById('hamburger-btn');
-    const menu = document.getElementById('nav-menu');
-    btn.addEventListener('click', () => {
-      const open = menu.classList.toggle('open');
-      btn.setAttribute('aria-expanded', open);
-    });
-    // Close on link click
-    menu.querySelectorAll('a').forEach(a => {
-      a.addEventListener('click', () => {
-        menu.classList.remove('open');
-        btn.setAttribute('aria-expanded', false);
-      });
-    });
-  </script>
-
+  // pump reveals — hide only below-fold so content survives if JS/IO delays
+  if(!reduce){
+    var pumps=document.querySelectorAll('.pump');var vh=window.innerHeight;
+    pumps.forEach(function(p,i){p.dataset.i=i;if(p.getBoundingClientRect().top>vh*0.82)p.classList.add('hide');});
+    var po=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting){
+      var el=e.target;setTimeout(function(){el.classList.remove('hide');},(parseInt(el.dataset.i)||0)*90);po.unobserve(el);}});},{threshold:.2});
+    pumps.forEach(function(p){if(p.classList.contains('hide'))po.observe(p);});
+  }
+})();
+</script>
 </body>
 </html>
