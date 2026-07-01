@@ -1,618 +1,263 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Car Wash – NW 13th St | Gainesville, FL</title>
-  <style>
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Car Wash — NW 13th St | Gainesville, FL</title>
+<style>
+  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+  :root{
+    --bg:#02141f;
+    --bg2:#062f45;
+    --teal:#0d84ad;
+    --cyan:#3ad2f0;
+    --mint:#5ff0c7;
+    --foam:#eafcff;
+    --white:#fff;
+    --muted:#9fc4d4;
+    --ink:#eafcff;
+  }
+  html{scroll-behavior:smooth}
+  body{
+    font-family:'Segoe UI',system-ui,-apple-system,Arial,sans-serif;
+    color:var(--ink);
+    background:radial-gradient(1200px 900px at 50% 20%, #073650 0%, var(--bg) 62%);
+    line-height:1.65;overflow-x:hidden;-webkit-font-smoothing:antialiased;
+  }
+  a{color:inherit}
 
-    :root {
-      --blue-dark:   #0a2540;
-      --blue-mid:    #1565c0;
-      --blue-bright: #2196f3;
-      --cyan:        #00bcd4;
-      --white:       #ffffff;
-      --off-white:   #f0f8ff;
-      --gray-light:  #e3eaf5;
-      --gray-text:   #4a607a;
-      --radius:      10px;
-    }
+  /* thin top bar */
+  .bar{position:fixed;top:0;left:0;right:0;z-index:40;display:flex;justify-content:center;gap:26px;padding:16px;
+    background:linear-gradient(180deg,rgba(2,20,31,.9),transparent)}
+  .bar a{color:var(--muted);text-decoration:none;font-weight:600;font-size:.86rem;letter-spacing:.04em}
+  .bar a:hover{color:var(--cyan)}
 
-    html { scroll-behavior: smooth; }
+  /* MONOLITH hero */
+  .monolith{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;
+    position:relative;padding:120px 20px 80px}
+  .orbit-stage{position:relative;width:min(560px,86vw);aspect-ratio:1;display:flex;align-items:center;justify-content:center}
+  /* rotating orbit rings */
+  .ring{position:absolute;border-radius:50%;border:1px solid rgba(58,210,240,.22)}
+  .ring.r1{inset:4%}
+  .ring.r2{inset:16%;border-style:dashed}
+  .ring.r3{inset:30%;border-color:rgba(95,240,199,.25)}
+  .orbit{position:absolute;inset:0;animation:spin linear infinite}
+  .orbit.o1{animation-duration:22s}
+  .orbit.o2{animation-duration:34s;animation-direction:reverse}
+  .orbit.o3{animation-duration:16s}
+  @keyframes spin{to{transform:rotate(360deg)}}
+  .sat{position:absolute;top:50%;left:50%;width:0;height:0}
+  .sat .dot{position:absolute;display:flex;align-items:center;justify-content:center;
+    width:52px;height:52px;margin:-26px;border-radius:16px;background:rgba(6,47,69,.85);border:1px solid rgba(58,210,240,.4);
+    box-shadow:0 10px 30px -12px rgba(0,0,0,.6);backdrop-filter:blur(4px)}
+  .sat .dot svg{width:24px;height:24px;fill:var(--cyan)}
+  .sat .dot span{counter-reset:none}
+  /* counter-rotate icon so it stays upright */
+  .orbit.o1 .dot{animation:cspin 22s linear infinite reverse}
+  .orbit.o2 .dot{animation:cspin 34s linear infinite}
+  .orbit.o3 .dot{animation:cspin 16s linear infinite reverse}
+  @keyframes cspin{to{transform:rotate(-360deg)}}
 
-    body {
-      font-family: 'Segoe UI', Arial, sans-serif;
-      color: var(--blue-dark);
-      background: var(--white);
-      line-height: 1.65;
-    }
+  /* the core */
+  .core{position:relative;z-index:3;width:58%;aspect-ratio:1;border-radius:50%;
+    background:radial-gradient(circle at 35% 30%, var(--cyan), var(--teal) 55%, var(--bg2));
+    box-shadow:0 0 0 10px rgba(58,210,240,.08), 0 30px 80px -20px rgba(58,210,240,.5);
+    display:flex;flex-direction:column;align-items:center;justify-content:center;padding:14px;
+    animation:pulse 5s ease-in-out infinite}
+  @keyframes pulse{50%{box-shadow:0 0 0 18px rgba(58,210,240,.05), 0 30px 90px -18px rgba(58,210,240,.65)}}
+  .core .drop{width:44px;height:44px;border-radius:50% 50% 50% 4px;transform:rotate(45deg);background:rgba(255,255,255,.9);margin-bottom:8px}
+  .core .place{color:#03202e;font-weight:900;font-size:clamp(1.1rem,3.4vw,1.7rem);line-height:1;letter-spacing:-.01em}
+  .core .place small{display:block;font-weight:700;font-size:.62em;opacity:.75;margin-top:4px}
 
-    /* ── NAV ── */
-    nav {
-      position: fixed;
-      top: 0; left: 0; right: 0;
-      z-index: 100;
-      background: var(--blue-dark);
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 0 2rem;
-      height: 64px;
-      box-shadow: 0 2px 12px rgba(0,0,0,.35);
-    }
+  .headline{margin-top:44px;max-width:760px}
+  .headline .eyebrow{font-size:.78rem;font-weight:800;letter-spacing:.22em;text-transform:uppercase;color:var(--cyan)}
+  .headline h1{font-size:clamp(2.4rem,7vw,4.6rem);font-weight:900;line-height:1;letter-spacing:-.02em;margin:14px 0 16px;color:#fff}
+  .headline h1 em{font-style:normal;background:linear-gradient(100deg,var(--cyan),var(--mint),var(--cyan));background-size:200% 100%;
+    -webkit-background-clip:text;background-clip:text;color:transparent;animation:sh 6s linear infinite}
+  @keyframes sh{to{background-position:-200% 0}}
+  .headline p{color:var(--muted);font-size:clamp(1rem,2.4vw,1.2rem);max-width:52ch;margin:0 auto}
+  .btn{display:inline-flex;align-items:center;gap:9px;margin-top:26px;text-decoration:none;font-weight:800;
+    padding:15px 30px;border-radius:50px;font-size:1rem;background:linear-gradient(135deg,var(--cyan),var(--mint));color:#02202b;
+    box-shadow:0 14px 34px -10px rgba(58,210,240,.7);transition:transform .18s}
+  .btn:hover{transform:translateY(-3px)}
+  .btn svg{width:18px;height:18px;fill:#02202b}
 
-    .nav-logo {
-      display: flex;
-      align-items: center;
-      gap: .65rem;
-      text-decoration: none;
-    }
+  /* content sections centered */
+  section{padding:clamp(60px,8vw,100px) 20px;max-width:900px;margin:0 auto;text-align:center}
+  .reveal{opacity:0;transform:translateY(30px);transition:opacity .8s,transform .8s}
+  .reveal.in{opacity:1;transform:none}
+  .lbl{font-size:.76rem;font-weight:800;letter-spacing:.18em;text-transform:uppercase;color:var(--cyan)}
+  h2{font-size:clamp(1.8rem,4.4vw,2.6rem);font-weight:900;color:#fff;margin:10px 0 16px;letter-spacing:-.015em}
+  .lede{color:var(--muted);font-size:1.06rem;max-width:60ch;margin:0 auto}
 
-    .nav-logo-icon {
-      width: 38px;
-      height: 38px;
-      background: var(--cyan);
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      flex-shrink: 0;
-    }
+  .svc{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:18px;margin-top:36px;text-align:left}
+  .card{background:rgba(255,255,255,.04);border:1px solid rgba(58,210,240,.16);border-radius:20px;padding:24px;transition:transform .25s,border-color .25s,background .25s}
+  .card:hover{transform:translateY(-6px);border-color:rgba(58,210,240,.5);background:rgba(58,210,240,.07)}
+  .card .ic{width:50px;height:50px;border-radius:14px;background:linear-gradient(135deg,var(--cyan),var(--teal));display:flex;align-items:center;justify-content:center;margin-bottom:12px}
+  .card .ic svg{width:25px;height:25px;fill:#fff}
+  .card h3{color:#fff;font-size:1.08rem;margin-bottom:6px}
+  .card p{color:var(--muted);font-size:.92rem}
 
-    .nav-logo-icon svg {
-      width: 22px;
-      height: 22px;
-      fill: var(--white);
-    }
+  /* fresh-start panel (no rating) */
+  .fresh{margin-top:24px;background:linear-gradient(160deg,rgba(58,210,240,.1),rgba(95,240,199,.06));
+    border:1px solid rgba(58,210,240,.28);border-radius:24px;padding:36px 28px;display:inline-flex;flex-direction:column;align-items:center;gap:8px}
+  .fresh .star{width:46px;height:46px;fill:var(--mint);margin-bottom:4px}
+  .fresh h3{color:#fff;font-size:1.35rem}
+  .fresh p{color:var(--muted)}
 
-    .nav-brand {
-      font-size: 1.05rem;
-      font-weight: 700;
-      color: var(--white);
-      letter-spacing: .02em;
-    }
+  /* contact */
+  .contact-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:20px;margin-top:32px;text-align:left}
+  .ci{background:rgba(255,255,255,.04);border:1px solid rgba(58,210,240,.16);border-radius:18px;padding:22px;display:flex;gap:13px;align-items:flex-start}
+  .ci .ic{width:42px;height:42px;flex:0 0 auto;border-radius:12px;background:rgba(58,210,240,.14);display:flex;align-items:center;justify-content:center}
+  .ci .ic svg{width:19px;height:19px;fill:var(--cyan)}
+  .ci b{display:block;font-size:.72rem;letter-spacing:.12em;text-transform:uppercase;color:var(--cyan);margin-bottom:3px}
+  .ci a,.ci span{color:#fff;text-decoration:none}
+  .ci a:hover{color:var(--cyan)}
 
-    .nav-links {
-      display: flex;
-      gap: 2rem;
-      list-style: none;
-    }
+  footer{text-align:center;padding:34px 16px 46px;color:var(--muted);font-size:.9rem;border-top:1px solid rgba(58,210,240,.12);margin-top:40px}
+  footer b{color:#fff}
 
-    .nav-links a {
-      color: rgba(255,255,255,.82);
-      text-decoration: none;
-      font-size: .93rem;
-      font-weight: 500;
-      transition: color .2s;
-    }
-
-    .nav-links a:hover { color: var(--cyan); }
-
-    .nav-cta {
-      background: var(--cyan);
-      color: var(--blue-dark) !important;
-      padding: .4rem 1.1rem;
-      border-radius: 20px;
-      font-weight: 700 !important;
-      font-size: .88rem !important;
-      transition: background .2s !important;
-    }
-
-    .nav-cta:hover { background: var(--blue-bright) !important; color: var(--white) !important; }
-
-    /* ── HERO ── */
-    .hero {
-      margin-top: 64px;
-      background: linear-gradient(135deg, var(--blue-dark) 0%, #0d3b72 55%, #1565c0 100%);
-      min-height: 560px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      text-align: center;
-      padding: 4rem 1.5rem;
-      position: relative;
-      overflow: hidden;
-    }
-
-    /* decorative bubbles */
-    .hero::before {
-      content: '';
-      position: absolute;
-      top: -80px; right: -80px;
-      width: 380px; height: 380px;
-      border-radius: 50%;
-      background: radial-gradient(circle, rgba(0,188,212,.18) 0%, transparent 70%);
-    }
-
-    .hero::after {
-      content: '';
-      position: absolute;
-      bottom: -60px; left: -60px;
-      width: 300px; height: 300px;
-      border-radius: 50%;
-      background: radial-gradient(circle, rgba(33,150,243,.16) 0%, transparent 70%);
-    }
-
-    .hero-content { position: relative; z-index: 1; max-width: 680px; }
-
-    .hero-badge {
-      display: inline-block;
-      background: rgba(0,188,212,.18);
-      color: var(--cyan);
-      border: 1px solid rgba(0,188,212,.4);
-      border-radius: 20px;
-      padding: .3rem .95rem;
-      font-size: .82rem;
-      font-weight: 600;
-      letter-spacing: .08em;
-      text-transform: uppercase;
-      margin-bottom: 1.2rem;
-    }
-
-    .hero h1 {
-      font-size: clamp(2rem, 5vw, 3.2rem);
-      color: var(--white);
-      font-weight: 800;
-      line-height: 1.15;
-      margin-bottom: 1rem;
-    }
-
-    .hero h1 span { color: var(--cyan); }
-
-    .hero p {
-      font-size: clamp(1rem, 2.2vw, 1.2rem);
-      color: rgba(255,255,255,.78);
-      max-width: 520px;
-      margin: 0 auto 2rem;
-    }
-
-    .hero-btns {
-      display: flex;
-      gap: 1rem;
-      justify-content: center;
-      flex-wrap: wrap;
-    }
-
-    .btn-primary {
-      background: var(--cyan);
-      color: var(--blue-dark);
-      font-weight: 700;
-      padding: .85rem 2rem;
-      border-radius: 30px;
-      text-decoration: none;
-      font-size: 1rem;
-      transition: transform .2s, box-shadow .2s;
-      box-shadow: 0 4px 18px rgba(0,188,212,.4);
-    }
-
-    .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 6px 24px rgba(0,188,212,.55); }
-
-    .btn-outline {
-      background: transparent;
-      color: var(--white);
-      border: 2px solid rgba(255,255,255,.5);
-      font-weight: 600;
-      padding: .85rem 2rem;
-      border-radius: 30px;
-      text-decoration: none;
-      font-size: 1rem;
-      transition: border-color .2s, color .2s;
-    }
-
-    .btn-outline:hover { border-color: var(--cyan); color: var(--cyan); }
-
-    /* ── SECTIONS SHARED ── */
-    section { padding: 5rem 1.5rem; }
-
-    .section-label {
-      display: inline-block;
-      color: var(--blue-bright);
-      font-size: .8rem;
-      font-weight: 700;
-      letter-spacing: .1em;
-      text-transform: uppercase;
-      margin-bottom: .6rem;
-    }
-
-    h2 {
-      font-size: clamp(1.7rem, 3.5vw, 2.4rem);
-      font-weight: 800;
-      color: var(--blue-dark);
-      line-height: 1.2;
-      margin-bottom: 1rem;
-    }
-
-    .container { max-width: 1100px; margin: 0 auto; }
-
-    /* ── ABOUT ── */
-    .about { background: var(--off-white); }
-
-    .about-inner {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 4rem;
-      align-items: center;
-    }
-
-    .about-text p { color: var(--gray-text); font-size: 1.05rem; margin-bottom: 1rem; }
-
-    .about-visual {
-      background: linear-gradient(145deg, var(--blue-dark) 0%, var(--blue-mid) 100%);
-      border-radius: var(--radius);
-      min-height: 300px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 2.5rem;
-      box-shadow: 0 8px 32px rgba(10,37,64,.18);
-    }
-
-    .about-visual-inner { text-align: center; color: var(--white); }
-
-    .about-icon {
-      width: 90px;
-      height: 90px;
-      background: rgba(0,188,212,.2);
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      margin: 0 auto 1.2rem;
-    }
-
-    .about-icon svg { width: 52px; height: 52px; fill: var(--cyan); }
-
-    .about-visual-inner h3 { font-size: 1.25rem; font-weight: 700; margin-bottom: .4rem; }
-    .about-visual-inner p { font-size: .92rem; color: rgba(255,255,255,.75); }
-
-    /* ── SERVICES ── */
-    .services { background: var(--white); }
-
-    .services-header { text-align: center; margin-bottom: 3rem; }
-
-    .services-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-      gap: 1.5rem;
-    }
-
-    .service-card {
-      background: var(--off-white);
-      border: 1px solid var(--gray-light);
-      border-radius: var(--radius);
-      padding: 2rem 1.75rem;
-      transition: transform .2s, box-shadow .2s;
-    }
-
-    .service-card:hover {
-      transform: translateY(-4px);
-      box-shadow: 0 8px 28px rgba(21,101,192,.12);
-    }
-
-    .service-icon {
-      width: 54px;
-      height: 54px;
-      background: linear-gradient(135deg, var(--blue-mid), var(--cyan));
-      border-radius: 12px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      margin-bottom: 1.1rem;
-    }
-
-    .service-icon svg { width: 28px; height: 28px; fill: var(--white); }
-
-    .service-card h3 { font-size: 1.05rem; font-weight: 700; margin-bottom: .45rem; color: var(--blue-dark); }
-    .service-card p  { font-size: .9rem; color: var(--gray-text); }
-
-    /* ── CONTACT ── */
-    .contact { background: var(--off-white); }
-
-    .contact-header { text-align: center; margin-bottom: 3rem; }
-
-    .contact-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-      gap: 1.5rem;
-      margin-bottom: 2.5rem;
-    }
-
-    .contact-card {
-      background: var(--white);
-      border: 1px solid var(--gray-light);
-      border-radius: var(--radius);
-      padding: 1.8rem;
-      display: flex;
-      gap: 1rem;
-      align-items: flex-start;
-    }
-
-    .contact-card-icon {
-      width: 46px;
-      height: 46px;
-      border-radius: 10px;
-      background: linear-gradient(135deg, var(--blue-mid), var(--cyan));
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      flex-shrink: 0;
-    }
-
-    .contact-card-icon svg { width: 24px; height: 24px; fill: var(--white); }
-
-    .contact-card h4 { font-size: .85rem; font-weight: 700; text-transform: uppercase; letter-spacing: .06em; color: var(--blue-bright); margin-bottom: .3rem; }
-    .contact-card p, .contact-card a { font-size: .97rem; color: var(--gray-text); text-decoration: none; display: block; }
-    .contact-card a:hover { color: var(--blue-mid); }
-
-    .rating-badge {
-      display: inline-flex;
-      align-items: center;
-      gap: .35rem;
-      background: #fff8e1;
-      border: 1px solid #ffe082;
-      border-radius: 8px;
-      padding: .25rem .7rem;
-      font-size: .88rem;
-      font-weight: 600;
-      color: #795548;
-      margin-top: .45rem;
-    }
-
-    .rating-badge svg { width: 16px; height: 16px; fill: #ffc107; }
-
-    .directions-wrap { text-align: center; margin-top: 1rem; }
-
-    .btn-directions {
-      display: inline-flex;
-      align-items: center;
-      gap: .5rem;
-      background: var(--blue-mid);
-      color: var(--white);
-      font-weight: 700;
-      padding: .9rem 2rem;
-      border-radius: 30px;
-      text-decoration: none;
-      font-size: 1rem;
-      transition: background .2s, transform .2s;
-      box-shadow: 0 4px 16px rgba(21,101,192,.3);
-    }
-
-    .btn-directions:hover { background: var(--blue-dark); transform: translateY(-2px); }
-    .btn-directions svg { width: 20px; height: 20px; fill: var(--white); }
-
-    /* ── FOOTER ── */
-    footer {
-      background: var(--blue-dark);
-      color: rgba(255,255,255,.7);
-      text-align: center;
-      padding: 2.5rem 1.5rem;
-      font-size: .88rem;
-    }
-
-    footer strong { color: var(--white); }
-    footer a { color: var(--cyan); text-decoration: none; }
-    footer a:hover { text-decoration: underline; }
-
-    /* ── RESPONSIVE ── */
-    @media (max-width: 768px) {
-      .nav-links { display: none; }
-      .about-inner { grid-template-columns: 1fr; gap: 2.5rem; }
-      .about-visual { min-height: 200px; }
-      section { padding: 3.5rem 1rem; }
-    }
-  </style>
+  @media(max-width:600px){
+    .sat .dot{width:44px;height:44px;margin:-22px}
+    .sat .dot svg{width:20px;height:20px}
+  }
+  @media(prefers-reduced-motion:reduce){
+    *{animation:none!important;scroll-behavior:auto!important}
+    .reveal{opacity:1;transform:none;transition:none}
+  }
+</style>
 </head>
 <body>
 
-<!-- NAV -->
-<nav>
-  <a href="#" class="nav-logo">
-    <div class="nav-logo-icon">
-      <!-- water drop / car wash icon -->
-      <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-        <path d="M17 12c-2.76 0-5 2.24-5 5s2.24 5 5 5 5-2.24 5-5-2.24-5-5-5zm0 8c-1.65 0-3-1.35-3-3s1.35-3 3-3 3 1.35 3 3-1.35 3-3 3zM3 6l1.5 1.5L6 6l1.5 1.5L9 6l1.5 1.5L12 6V2H3v4zm0 8h9v-2H3v2zm0-4h9V8H3v2z"/>
-      </svg>
+<div class="bar">
+  <a href="#top">Home</a>
+  <a href="#about">About</a>
+  <a href="#services">Services</a>
+  <a href="#contact">Contact</a>
+</div>
+
+<section class="monolith" id="top">
+  <div class="orbit-stage">
+    <div class="ring r1"></div><div class="ring r2"></div><div class="ring r3"></div>
+
+    <div class="orbit o1">
+      <div class="sat" style="transform:translate(0,-46%)"><div class="dot"><svg viewBox="0 0 24 24"><path d="M17 8C8 10 5.9 16.17 3.82 19.5c-.19.33-.12.75.2.96s.73.1.94-.22C6.96 17.5 9.5 13 17 11V8zM19 3h-2v2h2V3zm0 4h-2v2h2V7z"/></svg></div></div>
+      <div class="sat" style="transform:translate(40%,26%)"><div class="dot"><svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 15a5 5 0 1 1 0-10 5 5 0 0 1 0 10z"/></svg></div></div>
     </div>
-    <span class="nav-brand">Car Wash · NW 13th St</span>
+    <div class="orbit o2">
+      <div class="sat" style="transform:translate(-40%,-26%)"><div class="dot"><svg viewBox="0 0 24 24"><path d="M12 2a5 5 0 0 0-5 5v1H5a1 1 0 0 0-1 1v10a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9a1 1 0 0 0-1-1h-2V7a5 5 0 0 0-5-5zm0 2a3 3 0 0 1 3 3v1H9V7a3 3 0 0 1 3-3z"/></svg></div></div>
+      <div class="sat" style="transform:translate(44%,-6%)"><div class="dot"><svg viewBox="0 0 24 24"><path d="M11 2v2.07A8 8 0 0 0 4.07 11H2v2h2.07A8 8 0 0 0 11 19.93V22h2v-2.07A8 8 0 0 0 19.93 13H22v-2h-2.07A8 8 0 0 0 13 4.07V2h-2zm1 4a6 6 0 1 1 0 12 6 6 0 0 1 0-12z"/></svg></div></div>
+    </div>
+    <div class="orbit o3">
+      <div class="sat" style="transform:translate(-42%,20%)"><div class="dot"><svg viewBox="0 0 24 24"><path d="M12 2C12 2 4 10.4 4 15a8 8 0 0 0 16 0C20 10.4 12 2 12 2z"/></svg></div></div>
+    </div>
+
+    <div class="core">
+      <span class="drop"></span>
+      <span class="place">NW 13th St<small>Gainesville, FL</small></span>
+    </div>
+  </div>
+
+  <div class="headline">
+    <div class="eyebrow">Car Wash · Gainesville, FL</div>
+    <h1>A fresh clean, <em>right on 13th</em></h1>
+    <p>A convenient neighborhood car wash on NW 13th St — a quick, easy stop to rinse off the road and get your ride looking sharp.</p>
+    <a class="btn" href="#contact"><svg viewBox="0 0 24 24"><path d="M21.71 11.29l-9-9a1 1 0 0 0-1.42 0l-9 9a1 1 0 0 0 0 1.42l9 9a1 1 0 0 0 1.42 0l9-9a1 1 0 0 0 0-1.42zM14 14.5V12h-4v3H8v-4a1 1 0 0 1 1-1h5V7.5l3.5 3.5-3.5 3.5z"/></svg>Get Directions</a>
+  </div>
+</section>
+
+<section id="about">
+  <div class="reveal">
+    <div class="lbl">About</div>
+    <h2>Clean cars, close to home</h2>
+    <p class="lede">This car wash on NW 13th St is a straightforward local stop for Gainesville drivers who want their vehicle looking its best without the hassle. Pull in for a quick wash and get back on the road refreshed.</p>
+  </div>
+  <div class="fresh reveal">
+    <svg class="star" viewBox="0 0 24 24"><path d="M12 2L9.19 8.63 2 9.24l5.46 4.73L5.82 21 12 17.27 18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2z"/></svg>
+    <h3>We are just getting started!</h3>
+    <p>No reviews yet — be the first to visit and tell Gainesville about us.</p>
+  </div>
+</section>
+
+<section id="services">
+  <div class="reveal">
+    <div class="lbl">What We Offer</div>
+    <h2>Our services</h2>
+    <p class="lede">From a quick rinse to a fuller clean, we help keep your vehicle looking great. Contact us for details on options and availability.</p>
+  </div>
+  <div class="svc">
+    <div class="card reveal">
+      <div class="ic"><svg viewBox="0 0 24 24"><path d="M17 8C8 10 5.9 16.17 3.82 19.5c-.19.33-.12.75.2.96s.73.1.94-.22C6.96 17.5 9.5 13 17 11V8zM19 3h-2v2h2V3zm0 4h-2v2h2V7z"/></svg></div>
+      <h3>Exterior Wash</h3><p>A thorough rinse and wash of the full exterior to clear dirt, dust, and road grime. Contact us for details.</p>
+    </div>
+    <div class="card reveal">
+      <div class="ic"><svg viewBox="0 0 24 24"><path d="M12 2a5 5 0 0 0-5 5v1H5a1 1 0 0 0-1 1v10a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9a1 1 0 0 0-1-1h-2V7a5 5 0 0 0-5-5zm0 2a3 3 0 0 1 3 3v1H9V7a3 3 0 0 1 3-3z"/></svg></div>
+      <h3>Foam Pre-Soak</h3><p>A high-foam pass that helps loosen heavy dirt before the main wash. Contact us for details.</p>
+    </div>
+    <div class="card reveal">
+      <div class="ic"><svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 15a5 5 0 1 1 0-10 5 5 0 0 1 0 10z"/></svg></div>
+      <h3>Wheel &amp; Tire</h3><p>Targeted cleaning of wheels and tires to clear brake dust and buildup. Contact us for details.</p>
+    </div>
+    <div class="card reveal">
+      <div class="ic"><svg viewBox="0 0 24 24"><path d="M11 2v2.07A8 8 0 0 0 4.07 11H2v2h2.07A8 8 0 0 0 11 19.93V22h2v-2.07A8 8 0 0 0 19.93 13H22v-2h-2.07A8 8 0 0 0 13 4.07V2h-2zm1 4a6 6 0 1 1 0 12 6 6 0 0 1 0-12z"/></svg></div>
+      <h3>Spot-Free Rinse</h3><p>A final rinse to help minimize water spots and leave a bright finish. Contact us for details.</p>
+    </div>
+  </div>
+</section>
+
+<section id="contact">
+  <div class="reveal">
+    <div class="lbl">Find Us</div>
+    <h2>Contact &amp; location</h2>
+    <p class="lede">Stop by on NW 13th St, or reach out with any questions.</p>
+  </div>
+  <div class="contact-grid">
+    <div class="ci reveal">
+      <div class="ic"><svg viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5A2.5 2.5 0 1 1 12 6.5a2.5 2.5 0 0 1 0 5z"/></svg></div>
+      <div><b>Address</b><span>3831 NW 13th St, Gainesville, FL</span></div>
+    </div>
+    <div class="ci reveal">
+      <div class="ic"><svg viewBox="0 0 24 24"><path d="M6.62 10.79a15.05 15.05 0 0 0 6.59 6.59l2.2-2.2a1 1 0 0 1 1.02-.24 11.4 11.4 0 0 0 3.57.57 1 1 0 0 1 1 1V20a1 1 0 0 1-1 1A17 17 0 0 1 3 4a1 1 0 0 1 1-1h3.5a1 1 0 0 1 1 1 11.4 11.4 0 0 0 .57 3.57 1 1 0 0 1-.25 1.02l-2.2 2.2z"/></svg></div>
+      <div><b>Phone</b><a href="tel:+13523787195">(352) 378-7195</a></div>
+    </div>
+    <div class="ci reveal">
+      <div class="ic"><svg viewBox="0 0 24 24"><path d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20a8 8 0 1 1 0-16 8 8 0 0 1 0 16zm.5-13H11v6l5.25 3.15.75-1.23-4.5-2.67V7z"/></svg></div>
+      <div><b>Hours</b><span>Contact us for current hours</span></div>
+    </div>
+  </div>
+  <a class="btn" href="https://www.google.com/maps/search/Car%20Wash%20(NW%2013th%20St)%203831%20NW%2013th%20St" target="_blank" rel="noopener noreferrer" style="margin-top:34px">
+    <svg viewBox="0 0 24 24"><path d="M21.71 11.29l-9-9a1 1 0 0 0-1.42 0l-9 9a1 1 0 0 0 0 1.42l9 9a1 1 0 0 0 1.42 0l9-9a1 1 0 0 0 0-1.42zM14 14.5V12h-4v3H8v-4a1 1 0 0 1 1-1h5V7.5l3.5 3.5-3.5 3.5z"/></svg>
+    Get Directions on Google Maps
   </a>
-  <ul class="nav-links">
-    <li><a href="#about">About</a></li>
-    <li><a href="#services">Services</a></li>
-    <li><a href="#contact" class="nav-cta">Contact</a></li>
-  </ul>
-</nav>
-
-<!-- HERO -->
-<section class="hero">
-  <div class="hero-content">
-    <span class="hero-badge">Gainesville, FL</span>
-    <h1>Spotless Every Time at <span>Car Wash</span></h1>
-    <p>Professional car wash services on NW 13th Street — keeping Gainesville vehicles clean, fresh, and road-ready.</p>
-    <div class="hero-btns">
-      <a href="#services" class="btn-primary">Our Services</a>
-      <a href="#contact" class="btn-outline">Get Directions</a>
-    </div>
-  </div>
 </section>
 
-<!-- ABOUT -->
-<section class="about" id="about">
-  <div class="container about-inner">
-    <div class="about-text">
-      <span class="section-label">About Us</span>
-      <h2>Your Local Car Wash on NW 13th St</h2>
-      <p>Conveniently located on NW 13th Street in Gainesville, we provide thorough, efficient car wash services for drivers across the area. Whether you need a quick exterior rinse or a more complete clean, our facility is set up to get you in and out with a vehicle you can be proud of.</p>
-      <p>We serve everyday commuters, students, and families who want a reliable, no-fuss place to keep their cars looking their best. Our location makes it easy to stop in on your way across town.</p>
-      <p>Have specific needs or questions? Contact us for details — we are happy to help.</p>
-    </div>
-    <div class="about-visual">
-      <div class="about-visual-inner">
-        <div class="about-icon">
-          <!-- car icon -->
-          <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-            <path d="M18.92 6.01C18.72 5.42 18.16 5 17.5 5h-11c-.66 0-1.21.42-1.42 1.01L3 12v8c0 .55.45 1 1 1h1c.55 0 1-.45 1-1v-1h12v1c0 .55.45 1 1 1h1c.55 0 1-.45 1-1v-8l-2.08-5.99zM6.5 16c-.83 0-1.5-.67-1.5-1.5S5.67 13 6.5 13s1.5.67 1.5 1.5S7.33 16 6.5 16zm11 0c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5zM5 11l1.5-4.5h11L19 11H5z"/>
-          </svg>
-        </div>
-        <h3>Serving Gainesville Drivers</h3>
-        <p>Fast, convenient, and thorough — right on NW 13th St.</p>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- SERVICES -->
-<section class="services" id="services">
-  <div class="container">
-    <div class="services-header">
-      <span class="section-label">What We Offer</span>
-      <h2>Car Wash Services</h2>
-      <p style="color:var(--gray-text);max-width:520px;margin:0 auto;">From basic exterior washes to more thorough interior and exterior care — we have options to suit your vehicle and your schedule.</p>
-    </div>
-    <div class="services-grid">
-
-      <div class="service-card">
-        <div class="service-icon">
-          <!-- water waves -->
-          <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-            <path d="M17 16.99c-1.35 0-2.2.42-2.95.8-.65.33-1.18.6-2.05.6-.9 0-1.4-.27-2.05-.6C9.2 17.4 8.35 17 7 17s-2.2.42-2.95.8c-.65.33-1.17.6-2.05.6v1.98c1.35 0 2.2-.42 2.95-.8.65-.33 1.18-.6 2.05-.6s1.4.27 2.05.6c.75.38 1.6.8 2.95.8s2.2-.42 2.95-.8c.65-.33 1.17-.6 2.05-.6s1.4.27 2.05.6c.75.38 1.6.8 2.95.8v-1.98c-.9 0-1.4-.27-2.05-.6-.75-.38-1.6-.81-2.95-.81zm0-4.45c-1.35 0-2.2.43-2.95.8-.65.32-1.18.6-2.05.6-.9 0-1.4-.28-2.05-.6C9.2 12.97 8.35 12.54 7 12.54s-2.2.43-2.95.8c-.65.33-1.17.6-2.05.6v1.98c1.35 0 2.2-.42 2.95-.8.65-.33 1.18-.6 2.05-.6s1.4.27 2.05.6c.75.38 1.6.8 2.95.8s2.2-.42 2.95-.8c.65-.33 1.17-.6 2.05-.6s1.4.27 2.05.6c.75.38 1.6.8 2.95.8v-1.98c-.9 0-1.4-.28-2.05-.6-.75-.37-1.6-.8-2.95-.8zM7 8.09c.87 0 1.4.27 2.05.6.75.37 1.6.8 2.95.8s2.2-.43 2.95-.8c.65-.33 1.17-.6 2.05-.6s1.4.27 2.05.6c.75.37 1.6.8 2.95.8V7.51c-.9 0-1.4-.28-2.05-.6C19.2 6.54 18.35 6.1 17 6.1s-2.2.43-2.95.8c-.65.33-1.17.6-2.05.6s-1.4-.27-2.05-.6C9.2 6.53 8.35 6.1 7 6.1s-2.2.43-2.95.8c-.65.32-1.17.6-2.05.6v1.98c1.35 0 2.2-.43 2.95-.8C5.6 8.36 6.13 8.09 7 8.09z"/>
-          </svg>
-        </div>
-        <h3>Exterior Wash</h3>
-        <p>A thorough rinse and wash of your vehicle's exterior, removing road grime, dust, and surface dirt.</p>
-      </div>
-
-      <div class="service-card">
-        <div class="service-icon">
-          <!-- sparkle / clean -->
-          <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-            <path d="M12 2L9.19 8.63 2 9.24l5.46 4.73L5.82 21 12 17.27 18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2z"/>
-          </svg>
-        </div>
-        <h3>Full-Service Wash</h3>
-        <p>Interior vacuuming and exterior wash combined for a complete clean inside and out. Contact us for details.</p>
-      </div>
-
-      <div class="service-card">
-        <div class="service-icon">
-          <!-- shield / wax -->
-          <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-            <path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4z"/>
-          </svg>
-        </div>
-        <h3>Wax &amp; Polish</h3>
-        <p>Protective wax coating to add shine and help guard your paint against the Florida sun and elements.</p>
-      </div>
-
-      <div class="service-card">
-        <div class="service-icon">
-          <!-- interior / seat -->
-          <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-            <path d="M7 17c0 1.1.9 2 2 2s2-.9 2-2H7zm10 0c0 1.1.9 2 2 2s2-.9 2-2h-4zm2-8l-2-6H7L5 9H3v2h1l1 5h16l1-5h1V9h-2zM8.54 5h6.92l1.54 4H7L8.54 5z"/>
-          </svg>
-        </div>
-        <h3>Interior Vacuum</h3>
-        <p>Thorough vacuuming of carpets, seats, and floor mats to remove dirt and debris from inside your vehicle.</p>
-      </div>
-
-      <div class="service-card">
-        <div class="service-icon">
-          <!-- tire / wheel -->
-          <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm0-12c-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4-1.79-4-4-4zm0 6c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2z"/>
-          </svg>
-        </div>
-        <h3>Tire &amp; Wheel Cleaning</h3>
-        <p>Detailed cleaning of tires and wheels to remove brake dust, road grime, and buildup for a sharp finish.</p>
-      </div>
-
-      <div class="service-card">
-        <div class="service-icon">
-          <!-- window / glass -->
-          <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-            <path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V5h14v14zM7 12h2v5H7zm4-7h2v12h-2zm4 4h2v8h-2z"/>
-          </svg>
-        </div>
-        <h3>Window Cleaning</h3>
-        <p>Streak-free cleaning of all exterior glass surfaces for maximum visibility while you drive.</p>
-      </div>
-
-    </div>
-  </div>
-</section>
-
-<!-- CONTACT -->
-<section class="contact" id="contact">
-  <div class="container">
-    <div class="contact-header">
-      <span class="section-label">Find Us</span>
-      <h2>Contact &amp; Location</h2>
-      <p style="color:var(--gray-text);max-width:480px;margin:0 auto;">Stop by or give us a call — we are conveniently located on NW 13th Street in Gainesville.</p>
-    </div>
-
-    <div class="contact-grid">
-
-      <div class="contact-card">
-        <div class="contact-card-icon">
-          <!-- location pin -->
-          <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-            <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/>
-          </svg>
-        </div>
-        <div>
-          <h4>Address</h4>
-          <p>3831 NW 13th St<br>Gainesville, FL</p>
-        </div>
-      </div>
-
-      <div class="contact-card">
-        <div class="contact-card-icon">
-          <!-- phone -->
-          <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-            <path d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"/>
-          </svg>
-        </div>
-        <div>
-          <h4>Phone</h4>
-          <a href="tel:+13523787195">(352) 378-7195</a>
-        </div>
-      </div>
-
-      <div class="contact-card">
-        <div class="contact-card-icon">
-          <!-- star / rating -->
-          <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-            <path d="M12 2L9.19 8.63 2 9.24l5.46 4.73L5.82 21 12 17.27 18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2z"/>
-          </svg>
-        </div>
-        <div>
-          <h4>Google Rating</h4>
-          <p>We are just getting started!</p>
-          <div class="rating-badge">
-            <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 2L9.19 8.63 2 9.24l5.46 4.73L5.82 21 12 17.27 18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2z"/></svg>
-            No reviews yet — be the first!
-          </div>
-        </div>
-      </div>
-
-    </div>
-
-    <div class="directions-wrap">
-      <a href="https://www.google.com/maps/search/Car%20Wash%20(NW%2013th%20St)%203831%20NW%2013th%20St" target="_blank" rel="noopener" class="btn-directions">
-        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-          <path d="M21.71 11.29l-9-9a1 1 0 00-1.42 0l-9 9a1 1 0 000 1.42l9 9a1 1 0 001.42 0l9-9a1 1 0 000-1.42zM14 14.5V12h-4v3H8v-4a1 1 0 011-1h5V7.5l3.5 3.5-3.5 3.5z"/>
-        </svg>
-        Get Directions on Google Maps
-      </a>
-    </div>
-  </div>
-</section>
-
-<!-- FOOTER -->
 <footer>
-  <p><strong>Car Wash (NW 13th St)</strong> &nbsp;|&nbsp; 3831 NW 13th St, Gainesville, FL &nbsp;|&nbsp; <a href="tel:+13523787195">(352) 378-7195</a></p>
-  <p style="margin-top:.5rem;">&copy; 2026 Car Wash NW 13th St. All rights reserved.</p>
+  <p><b>Car Wash (NW 13th St)</b> — 3831 NW 13th St, Gainesville, FL — <a href="tel:+13523787195" style="color:inherit">(352) 378-7195</a></p>
 </footer>
 
+<script>
+(function(){
+  var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var rev = document.querySelectorAll('.reveal');
+  if (reduce || !('IntersectionObserver' in window)) {
+    rev.forEach(function(r){ r.classList.add('in'); });
+    return;
+  }
+  var io = new IntersectionObserver(function(es){
+    es.forEach(function(e){ if(e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target);} });
+  }, {threshold:.15});
+  rev.forEach(function(r){ io.observe(r); });
+
+  // subtle parallax on the orbit stage
+  var stage = document.querySelector('.orbit-stage');
+  if (stage && matchMedia('(pointer:fine)').matches){
+    window.addEventListener('pointermove', function(ev){
+      var cx = window.innerWidth/2, cy = window.innerHeight/2;
+      var dx = (ev.clientX - cx)/cx, dy = (ev.clientY - cy)/cy;
+      stage.style.transform = 'translate('+(dx*10)+'px,'+(dy*10)+'px)';
+    }, {passive:true});
+  }
+})();
+</script>
 </body>
 </html>
