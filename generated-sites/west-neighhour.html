@@ -1,678 +1,267 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>West Neighhour – Convenience Store | Gainesville, FL</title>
-  <style>
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
-    :root {
-      --navy:    #1a2e44;
-      --teal:    #2a7f7f;
-      --teal-lt: #3aadad;
-      --amber:   #f5a623;
-      --amber-lt:#fdd17a;
-      --cream:   #f9f5ee;
-      --white:   #ffffff;
-      --gray:    #5a6a78;
-      --gray-lt: #e8edf2;
-      --text:    #1e2d3d;
-    }
-
-    html { scroll-behavior: smooth; }
-
-    body {
-      font-family: 'Segoe UI', Arial, sans-serif;
-      color: var(--text);
-      background: var(--cream);
-      line-height: 1.7;
-    }
-
-    /* ── NAV ── */
-    nav {
-      position: fixed;
-      top: 0; left: 0; right: 0;
-      z-index: 1000;
-      background: var(--navy);
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 0 2rem;
-      height: 64px;
-      box-shadow: 0 2px 10px rgba(0,0,0,.3);
-    }
-
-    .nav-brand {
-      display: flex;
-      align-items: center;
-      gap: 0.6rem;
-      text-decoration: none;
-    }
-
-    .nav-logo-icon {
-      width: 38px; height: 38px;
-      background: var(--amber);
-      border-radius: 8px;
-      display: flex; align-items: center; justify-content: center;
-      font-size: 1.2rem;
-      font-weight: 900;
-      color: var(--navy);
-      letter-spacing: -1px;
-      flex-shrink: 0;
-    }
-
-    .nav-name {
-      font-size: 1.1rem;
-      font-weight: 700;
-      color: var(--white);
-      letter-spacing: 0.02em;
-    }
-
-    .nav-links {
-      display: flex;
-      gap: 2rem;
-      list-style: none;
-    }
-
-    .nav-links a {
-      color: var(--gray-lt);
-      text-decoration: none;
-      font-size: 0.92rem;
-      font-weight: 500;
-      transition: color 0.2s;
-    }
-
-    .nav-links a:hover { color: var(--amber); }
-
-    /* hamburger */
-    .hamburger {
-      display: none;
-      flex-direction: column;
-      gap: 5px;
-      cursor: pointer;
-      background: none;
-      border: none;
-      padding: 4px;
-    }
-    .hamburger span {
-      display: block;
-      width: 26px; height: 2px;
-      background: var(--white);
-      border-radius: 2px;
-      transition: all 0.3s;
-    }
-
-    /* ── HERO ── */
-    .hero {
-      margin-top: 64px;
-      background: linear-gradient(135deg, var(--navy) 0%, var(--teal) 100%);
-      color: var(--white);
-      padding: 7rem 2rem 5rem;
-      text-align: center;
-      position: relative;
-      overflow: hidden;
-    }
-
-    .hero::before {
-      content: '';
-      position: absolute;
-      inset: 0;
-      background-image:
-        radial-gradient(circle at 20% 80%, rgba(245,166,35,.15) 0%, transparent 50%),
-        radial-gradient(circle at 80% 20%, rgba(58,173,173,.2)  0%, transparent 50%);
-      pointer-events: none;
-    }
-
-    .hero-badge {
-      display: inline-block;
-      background: rgba(245,166,35,.2);
-      border: 1px solid var(--amber);
-      color: var(--amber-lt);
-      font-size: 0.78rem;
-      font-weight: 700;
-      letter-spacing: 0.12em;
-      text-transform: uppercase;
-      padding: 0.3rem 1rem;
-      border-radius: 50px;
-      margin-bottom: 1.5rem;
-    }
-
-    .hero h1 {
-      font-size: clamp(2.2rem, 5vw, 3.8rem);
-      font-weight: 800;
-      line-height: 1.15;
-      margin-bottom: 1rem;
-      letter-spacing: -0.01em;
-    }
-
-    .hero h1 span { color: var(--amber); }
-
-    .hero p {
-      font-size: clamp(1rem, 2vw, 1.25rem);
-      color: rgba(255,255,255,.82);
-      max-width: 560px;
-      margin: 0 auto 2.5rem;
-    }
-
-    .hero-cta {
-      display: inline-flex;
-      gap: 1rem;
-      flex-wrap: wrap;
-      justify-content: center;
-    }
-
-    .btn {
-      display: inline-block;
-      padding: 0.8rem 2rem;
-      border-radius: 8px;
-      font-weight: 700;
-      font-size: 0.95rem;
-      text-decoration: none;
-      transition: transform 0.15s, box-shadow 0.15s;
-      cursor: pointer;
-      border: none;
-    }
-
-    .btn:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(0,0,0,.25); }
-
-    .btn-primary {
-      background: var(--amber);
-      color: var(--navy);
-    }
-
-    .btn-outline {
-      background: transparent;
-      border: 2px solid rgba(255,255,255,.6);
-      color: var(--white);
-    }
-
-    /* ── SECTION BASE ── */
-    section { padding: 5rem 2rem; }
-    .container { max-width: 1100px; margin: 0 auto; }
-
-    .section-label {
-      display: inline-block;
-      font-size: 0.75rem;
-      font-weight: 700;
-      letter-spacing: 0.12em;
-      text-transform: uppercase;
-      color: var(--teal);
-      margin-bottom: 0.6rem;
-    }
-
-    .section-title {
-      font-size: clamp(1.6rem, 3vw, 2.4rem);
-      font-weight: 800;
-      color: var(--navy);
-      margin-bottom: 1rem;
-      line-height: 1.2;
-    }
-
-    .section-sub {
-      color: var(--gray);
-      max-width: 600px;
-      font-size: 1.05rem;
-    }
-
-    /* ── ABOUT ── */
-    #about { background: var(--white); }
-
-    .about-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 4rem;
-      align-items: center;
-      margin-top: 3rem;
-    }
-
-    .about-visual {
-      background: linear-gradient(145deg, var(--navy) 0%, var(--teal) 100%);
-      border-radius: 16px;
-      aspect-ratio: 4/3;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      gap: 1rem;
-      color: var(--white);
-      text-align: center;
-      padding: 2rem;
-      position: relative;
-      overflow: hidden;
-    }
-
-    .about-visual::before {
-      content: '';
-      position: absolute;
-      inset: 0;
-      background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.04'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
-    }
-
-    .about-icon { font-size: 4rem; position: relative; }
-
-    .about-visual-text {
-      font-size: 1.4rem;
-      font-weight: 800;
-      position: relative;
-      line-height: 1.2;
-    }
-
-    .about-visual-sub {
-      font-size: 0.88rem;
-      opacity: 0.7;
-      position: relative;
-    }
-
-    .about-content p {
-      color: var(--gray);
-      margin-bottom: 1rem;
-      font-size: 1.02rem;
-    }
-
-    .about-highlights {
-      display: flex;
-      flex-direction: column;
-      gap: 0.8rem;
-      margin-top: 1.5rem;
-    }
-
-    .highlight-item {
-      display: flex;
-      align-items: center;
-      gap: 0.75rem;
-      font-size: 0.95rem;
-      font-weight: 600;
-      color: var(--navy);
-    }
-
-    .highlight-dot {
-      width: 10px; height: 10px;
-      border-radius: 50%;
-      background: var(--amber);
-      flex-shrink: 0;
-    }
-
-    /* ── SERVICES ── */
-    #services { background: var(--cream); }
-
-    .services-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(270px, 1fr));
-      gap: 1.5rem;
-      margin-top: 3rem;
-    }
-
-    .service-card {
-      background: var(--white);
-      border-radius: 12px;
-      padding: 2rem 1.75rem;
-      border: 1px solid var(--gray-lt);
-      transition: transform 0.2s, box-shadow 0.2s, border-color 0.2s;
-      position: relative;
-      overflow: hidden;
-    }
-
-    .service-card::after {
-      content: '';
-      position: absolute;
-      bottom: 0; left: 0; right: 0;
-      height: 3px;
-      background: linear-gradient(90deg, var(--teal), var(--amber));
-      transform: scaleX(0);
-      transform-origin: left;
-      transition: transform 0.3s;
-    }
-
-    .service-card:hover {
-      transform: translateY(-4px);
-      box-shadow: 0 12px 32px rgba(26,46,68,.1);
-      border-color: var(--teal-lt);
-    }
-
-    .service-card:hover::after { transform: scaleX(1); }
-
-    .service-icon {
-      font-size: 2.2rem;
-      margin-bottom: 1rem;
-      display: block;
-    }
-
-    .service-title {
-      font-size: 1.1rem;
-      font-weight: 700;
-      color: var(--navy);
-      margin-bottom: 0.4rem;
-    }
-
-    .service-desc {
-      font-size: 0.9rem;
-      color: var(--gray);
-      line-height: 1.6;
-    }
-
-    /* ── CONTACT ── */
-    #contact { background: var(--navy); color: var(--white); }
-
-    #contact .section-label { color: var(--amber-lt); }
-    #contact .section-title { color: var(--white); }
-    #contact .section-sub { color: rgba(255,255,255,.7); }
-
-    .contact-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 4rem;
-      margin-top: 3rem;
-      align-items: start;
-    }
-
-    .contact-info { display: flex; flex-direction: column; gap: 1.5rem; }
-
-    .contact-item {
-      display: flex;
-      gap: 1rem;
-      align-items: flex-start;
-    }
-
-    .contact-item-icon {
-      width: 44px; height: 44px;
-      background: rgba(245,166,35,.15);
-      border: 1px solid rgba(245,166,35,.3);
-      border-radius: 10px;
-      display: flex; align-items: center; justify-content: center;
-      font-size: 1.2rem;
-      flex-shrink: 0;
-    }
-
-    .contact-item-label {
-      font-size: 0.75rem;
-      font-weight: 700;
-      letter-spacing: 0.1em;
-      text-transform: uppercase;
-      color: var(--amber-lt);
-      margin-bottom: 0.2rem;
-    }
-
-    .contact-item-value {
-      font-size: 1rem;
-      color: rgba(255,255,255,.9);
-    }
-
-    .contact-item-value a {
-      color: rgba(255,255,255,.9);
-      text-decoration: none;
-      transition: color 0.2s;
-    }
-
-    .contact-item-value a:hover { color: var(--amber); }
-
-    /* rating */
-    .rating-box {
-      background: rgba(255,255,255,.06);
-      border: 1px solid rgba(255,255,255,.12);
-      border-radius: 14px;
-      padding: 2rem;
-      text-align: center;
-    }
-
-    .rating-stars {
-      font-size: 1.8rem;
-      letter-spacing: 2px;
-      margin-bottom: 0.5rem;
-    }
-
-    .rating-number {
-      font-size: 3rem;
-      font-weight: 900;
-      color: var(--amber);
-      line-height: 1;
-      margin-bottom: 0.3rem;
-    }
-
-    .rating-label {
-      font-size: 0.85rem;
-      color: rgba(255,255,255,.55);
-      margin-bottom: 1.5rem;
-    }
-
-    .directions-btn {
-      display: inline-block;
-      padding: 0.85rem 2rem;
-      background: var(--amber);
-      color: var(--navy);
-      font-weight: 800;
-      font-size: 0.95rem;
-      border-radius: 8px;
-      text-decoration: none;
-      transition: background 0.2s, transform 0.15s;
-    }
-
-    .directions-btn:hover {
-      background: var(--amber-lt);
-      transform: translateY(-2px);
-    }
-
-    .rating-source {
-      margin-top: 0.8rem;
-      font-size: 0.78rem;
-      color: rgba(255,255,255,.35);
-    }
-
-    /* ── FOOTER ── */
-    footer {
-      background: #0f1c2b;
-      color: rgba(255,255,255,.4);
-      text-align: center;
-      padding: 2rem 1rem;
-      font-size: 0.85rem;
-    }
-
-    footer strong { color: rgba(255,255,255,.7); }
-
-    /* ── RESPONSIVE ── */
-    @media (max-width: 768px) {
-      .hamburger { display: flex; }
-
-      .nav-links {
-        display: none;
-        position: absolute;
-        top: 64px; left: 0; right: 0;
-        background: var(--navy);
-        flex-direction: column;
-        padding: 1.5rem 2rem;
-        gap: 1.2rem;
-        border-top: 1px solid rgba(255,255,255,.1);
-      }
-
-      .nav-links.open { display: flex; }
-
-      .about-grid,
-      .contact-grid { grid-template-columns: 1fr; gap: 2.5rem; }
-
-      .about-visual { aspect-ratio: 16/7; }
-
-      section { padding: 3.5rem 1.25rem; }
-    }
-
-    @media (max-width: 480px) {
-      .hero { padding: 5rem 1.25rem 4rem; }
-      .services-grid { grid-template-columns: 1fr; }
-    }
-  </style>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>West Neighhour | Gainesville, FL</title>
+<style>
+  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+  :root{
+    --violet:#3a0f7a;
+    --violet-deep:#26064f;
+    --lime:#c0ff3e;
+    --lime-deep:#8fd400;
+    --magenta:#ff3fb0;
+    --cream:#f6f0ff;
+    --ink:#170a2e;
+    --white:#fff;
+    --rail:250px;
+  }
+  html{scroll-behavior:smooth}
+  body{font-family:"Segoe UI",system-ui,Arial,sans-serif;background:var(--cream);color:var(--ink);line-height:1.6;overflow-x:hidden}
+
+  /* fixed side rail */
+  .rail{position:fixed;top:0;left:0;bottom:0;width:var(--rail);z-index:100;
+    background:linear-gradient(180deg,var(--violet),var(--violet-deep));color:#fff;
+    display:flex;flex-direction:column;padding:1.8rem 1.4rem;gap:1.4rem;
+    border-right:4px solid var(--lime)}
+  .rail-brand{display:flex;align-items:center;gap:.6rem}
+  .rail-logo{width:48px;height:48px;display:grid;place-items:center;font-weight:900;font-size:1.1rem;
+    background:var(--lime);color:var(--ink);border-radius:14px;transform:rotate(-6deg)}
+  .rail-brand b{font-weight:900;line-height:1.1;font-size:1.05rem}
+  .rail-brand span{display:block;font-size:.7rem;color:var(--lime);letter-spacing:1px;text-transform:uppercase}
+  .rail-nav{display:flex;flex-direction:column;gap:.3rem;margin-top:.6rem}
+  .rail-nav a{color:#d9c7ff;text-decoration:none;font-weight:700;padding:.6rem .8rem;border-radius:10px;
+    display:flex;align-items:center;gap:.6rem;transition:background .2s,color .2s;font-size:.92rem}
+  .rail-nav a .n{font-size:.72rem;opacity:.6;font-weight:900}
+  .rail-nav a:hover{color:#fff;background:rgba(255,255,255,.08)}
+  .rail-nav a.active{background:var(--lime);color:var(--ink)}
+  .rail-foot{margin-top:auto;font-size:.82rem;color:#c9b3f0;line-height:1.5}
+  .rail-foot a{color:var(--lime);text-decoration:none;font-weight:800}
+  .rail-rating{background:rgba(255,255,255,.08);border:1px solid rgba(192,255,62,.35);border-radius:14px;padding:.9rem}
+  .rail-rating .score{font-size:1.8rem;font-weight:900;color:var(--lime);line-height:1}
+  .rail-rating .rstars{color:var(--magenta);letter-spacing:2px}
+  .rail-rating small{color:#c9b3f0;display:block}
+
+  .railtop{display:none}
+
+  /* content */
+  .content{margin-left:var(--rail)}
+  section{padding:5rem 3rem;min-height:60vh}
+  .kick{display:inline-block;font-size:.72rem;font-weight:900;letter-spacing:3px;text-transform:uppercase;
+    color:var(--white);background:var(--magenta);padding:.3rem .9rem;border-radius:999px;margin-bottom:.9rem}
+  .h2{font-size:clamp(1.8rem,4vw,3rem);font-weight:900;line-height:1.05;margin-bottom:1rem}
+  .h2 em{font-style:normal;color:var(--magenta)}
+  .lead{color:#4a3a63;max-width:60ch;margin-bottom:1rem}
+
+  /* hero */
+  .hero{background:radial-gradient(circle at 80% 10%,rgba(255,63,176,.18),transparent 45%),var(--cream);
+    display:flex;flex-direction:column;justify-content:center}
+  .badge{display:inline-block;background:var(--violet);color:#fff;font-weight:900;font-size:.78rem;
+    letter-spacing:1.5px;text-transform:uppercase;padding:.35rem 1rem;border-radius:999px;width:fit-content;margin-bottom:1rem}
+  .hero h1{font-size:clamp(2.6rem,6vw,4.6rem);font-weight:900;line-height:.98;letter-spacing:-1px}
+  .hero h1 span{color:var(--violet)}
+  .hero .tag{color:#4a3a63;font-size:clamp(1rem,2vw,1.25rem);max-width:40ch;margin:1rem 0 1.6rem}
+  .btns{display:flex;gap:.8rem;flex-wrap:wrap}
+  .btn{text-decoration:none;font-weight:900;padding:.9rem 1.7rem;border-radius:14px;transition:transform .16s}
+  .btn-p{background:var(--violet);color:#fff;box-shadow:0 8px 24px rgba(58,15,122,.4)}
+  .btn-o{background:transparent;border:2px solid var(--violet);color:var(--violet)}
+  .btn:hover{transform:translateY(-3px)}
+
+  .about{background:var(--white)}
+  .about-grid{display:grid;grid-template-columns:1fr 1.3fr;gap:2rem;align-items:center;margin-top:1rem}
+  .about-visual{background:linear-gradient(160deg,var(--violet),var(--violet-deep));color:#fff;border-radius:22px;
+    padding:2.4rem;text-align:center;box-shadow:0 16px 40px rgba(58,15,122,.3)}
+  .about-visual .st{font-size:4rem}
+  .about-visual b{display:block;font-size:1.4rem;font-weight:900;margin-top:.5rem}
+  .about-visual span{color:var(--lime);font-weight:700}
+  .hl{display:flex;flex-direction:column;gap:.6rem;margin-top:1rem}
+  .hl-item{display:flex;align-items:center;gap:.7rem;font-weight:700;color:#3a2a53}
+  .hl-dot{width:12px;height:12px;border-radius:50%;background:var(--lime);border:2px solid var(--violet);flex-shrink:0}
+
+  .offers .offer-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:1.1rem;margin-top:1.4rem}
+  .oc{background:var(--white);border:3px solid var(--ink);border-radius:18px;padding:1.4rem;
+    box-shadow:6px 6px 0 var(--violet);transition:opacity .5s,transform .5s}
+  .oc.hide{opacity:0;transform:translateX(-24px)}
+  .oc .em{font-size:1.9rem;width:56px;height:56px;display:grid;place-items:center;background:var(--lime);border:2px solid var(--ink);border-radius:14px;margin-bottom:.6rem}
+  .oc h3{font-size:1.1rem;font-weight:900}
+  .oc p{font-size:.9rem;color:#4a3a63}
+
+  .contact{background:var(--violet-deep);color:#fff}
+  .contact .kick{background:var(--lime);color:var(--ink)}
+  .contact .h2 em{color:var(--lime)}
+  .contact .lead{color:#d3c2f0}
+  .contact-grid{display:grid;grid-template-columns:1fr 1fr;gap:2rem;margin-top:1rem}
+  .cline{display:flex;gap:.9rem;margin-bottom:1.2rem}
+  .cline .ci{width:44px;height:44px;flex-shrink:0;border-radius:12px;display:grid;place-items:center;
+    background:rgba(192,255,62,.14);border:1px solid rgba(192,255,62,.4);font-size:1.2rem}
+  .cline b{display:block;font-size:.72rem;text-transform:uppercase;letter-spacing:1px;color:var(--lime)}
+  .cline a{color:#fff;text-decoration:none;font-weight:800}
+  .cline a:hover{color:var(--lime)}
+  .ratecard{background:rgba(255,255,255,.06);border:1px solid rgba(255,63,176,.4);border-radius:20px;padding:2rem;text-align:center;display:flex;flex-direction:column;justify-content:center;gap:.3rem}
+  .ratecard .rstars{font-size:1.6rem;letter-spacing:3px;color:var(--magenta)}
+  .ratecard .score{font-size:3.6rem;font-weight:900;color:var(--lime);line-height:1}
+  .ratecard small{color:#d3c2f0}
+  .dir{display:inline-flex;align-items:center;gap:.5rem;margin-top:.8rem;text-decoration:none;background:var(--magenta);color:#fff;
+    font-weight:900;padding:.9rem 1.6rem;border-radius:14px;box-shadow:0 8px 24px rgba(255,63,176,.4);transition:transform .15s}
+  .dir:hover{transform:translateY(-2px)}
+
+  footer{margin-left:var(--rail);background:var(--ink);color:#a68fd0;text-align:center;padding:2rem 1.5rem;font-size:.85rem}
+  footer a{color:var(--lime);text-decoration:none}
+
+  @media(max-width:960px){
+    :root{--rail:0px}
+    .rail{position:sticky;top:0;left:0;right:0;bottom:auto;width:100%;flex-direction:row;align-items:center;
+      justify-content:space-between;padding:.7rem 1.1rem;border-right:0;border-bottom:4px solid var(--lime);gap:.8rem}
+    .rail-nav{flex-direction:row;margin:0;flex-wrap:wrap;gap:.2rem}
+    .rail-nav a{padding:.4rem .6rem;font-size:.8rem}
+    .rail-nav a .n{display:none}
+    .rail-foot,.rail-rating{display:none}
+    .content,footer{margin-left:0}
+    section{padding:3.5rem 1.4rem}
+    .about-grid,.contact-grid{grid-template-columns:1fr}
+  }
+  @media(max-width:620px){
+    .offers .offer-grid{grid-template-columns:1fr}
+    .rail-nav{display:none}
+    .railtop{display:flex}
+    .railtop.open+.rail-nav,.rail-nav.open{display:flex;position:absolute;top:100%;left:0;right:0;background:var(--violet-deep);flex-direction:column;padding:.8rem 1rem}
+  }
+  @media(prefers-reduced-motion:reduce){
+    html{scroll-behavior:auto}
+    .oc{transition:none}
+    .oc.hide{opacity:1;transform:none}
+  }
+</style>
 </head>
 <body>
 
-  <!-- NAV -->
-  <nav>
-    <a href="#" class="nav-brand">
-      <div class="nav-logo-icon">WN</div>
-      <span class="nav-name">West Neighhour</span>
-    </a>
-    <button class="hamburger" id="hamburger" aria-label="Toggle menu">
-      <span></span><span></span><span></span>
-    </button>
-    <ul class="nav-links" id="nav-links">
-      <li><a href="#about">About</a></li>
-      <li><a href="#services">Services</a></li>
-      <li><a href="#contact">Contact</a></li>
-    </ul>
+<aside class="rail">
+  <div class="rail-brand">
+    <span class="rail-logo">WN</span>
+    <b>West Neighhour<span>Gainesville, FL</span></b>
+  </div>
+  <button class="railtop burger" id="burger" aria-label="Toggle navigation" style="background:none;border:0;cursor:pointer;flex-direction:column;gap:5px">
+    <span style="width:26px;height:3px;background:var(--lime);border-radius:3px;display:block"></span>
+    <span style="width:26px;height:3px;background:var(--lime);border-radius:3px;display:block"></span>
+    <span style="width:26px;height:3px;background:var(--lime);border-radius:3px;display:block"></span>
+  </button>
+  <nav class="rail-nav" id="railNav">
+    <a href="#home" data-sec="home"><span class="n">01</span> Home</a>
+    <a href="#about" data-sec="about"><span class="n">02</span> About</a>
+    <a href="#offer" data-sec="offer"><span class="n">03</span> What We Offer</a>
+    <a href="#contact" data-sec="contact"><span class="n">04</span> Contact</a>
   </nav>
+  <div class="rail-foot">
+    <div class="rail-rating">
+      <div class="score">3.0</div>
+      <div class="rstars">&#9733;&#9733;&#9733;&#9734;&#9734;</div>
+      <small>Google Maps · 2 reviews</small>
+    </div>
+    <p style="margin-top:.8rem">7114 W University Ave<br>Gainesville, FL<br><a href="tel:+13523330533">(352) 333-0533</a></p>
+  </div>
+</aside>
 
-  <!-- HERO -->
+<main class="content">
   <section class="hero" id="home">
-    <div class="hero-badge">Gainesville, FL &bull; Convenience Store</div>
+    <span class="badge">Gainesville, FL · Convenience Store</span>
     <h1>Your <span>Neighborhood</span><br>Corner Stop</h1>
-    <p>Quick, convenient, and close to home — West Neighhour has what you need, when you need it.</p>
-    <div class="hero-cta">
-      <a href="#services" class="btn btn-primary">See What We Carry</a>
-      <a href="#contact" class="btn btn-outline">Find Us</a>
+    <p class="tag">Quick, convenient, and close to home — West Neighhour has what you need, when you need it.</p>
+    <div class="btns">
+      <a href="#offer" class="btn btn-p">See What We Carry</a>
+      <a href="#contact" class="btn btn-o">Find Us</a>
     </div>
   </section>
 
-  <!-- ABOUT -->
-  <section id="about">
-    <div class="container">
+  <section class="about" id="about">
+    <span class="kick">About Us</span>
+    <h2 class="h2">Serving the <em>West University</em> Community</h2>
+    <p class="lead">A familiar stop for students, commuters, and residents alike.</p>
+    <div class="about-grid">
+      <div class="about-visual">
+        <div class="st">🏪</div>
+        <b>West Neighhour</b>
+        <span>7114 W University Ave, Gainesville FL</span>
+      </div>
       <div>
-        <span class="section-label">About Us</span>
-        <h2 class="section-title">Serving the West University Community</h2>
-        <p class="section-sub">A familiar stop for students, commuters, and residents alike.</p>
-      </div>
-      <div class="about-grid">
-        <div class="about-visual">
-          <div class="about-icon">🏪</div>
-          <div class="about-visual-text">West Neighhour</div>
-          <div class="about-visual-sub">7114 W University Ave, Gainesville FL</div>
-        </div>
-        <div class="about-content">
-          <p>West Neighhour is a convenient neighborhood store located on West University Avenue, making it an easy stop for the UF-area community. Whether you are grabbing a quick snack, a cold drink, or everyday household essentials, this store is set up to make your visit fast and hassle-free.</p>
-          <p>Serving the west Gainesville corridor, West Neighhour stocks a broad selection of everyday goods so residents and commuters can get what they need without going out of their way.</p>
-          <p>We pride ourselves on a welcoming atmosphere and a well-stocked selection — the kind of neighborhood store you can count on any day of the week.</p>
-          <div class="about-highlights">
-            <div class="highlight-item"><div class="highlight-dot"></div>Conveniently located on W University Ave</div>
-            <div class="highlight-item"><div class="highlight-dot"></div>Everyday essentials stocked and ready</div>
-            <div class="highlight-item"><div class="highlight-dot"></div>Quick, easy, no-fuss shopping</div>
-          </div>
+        <p class="lead">West Neighhour is a convenient neighborhood store located on West University Avenue, making it an easy stop for the UF-area community. Whether you're grabbing a quick snack, a cold drink, or everyday household essentials, this store is set up to make your visit fast and hassle-free.</p>
+        <p class="lead">Serving the west Gainesville corridor, West Neighhour stocks a broad selection of everyday goods so residents and commuters can get what they need without going out of their way.</p>
+        <div class="hl">
+          <div class="hl-item"><span class="hl-dot"></span>Conveniently located on W University Ave</div>
+          <div class="hl-item"><span class="hl-dot"></span>Everyday essentials stocked and ready</div>
+          <div class="hl-item"><span class="hl-dot"></span>Quick, easy, no-fuss shopping</div>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- SERVICES -->
-  <section id="services">
-    <div class="container">
-      <span class="section-label">What We Offer</span>
-      <h2 class="section-title">Everyday Essentials, All in One Place</h2>
-      <p class="section-sub">From snacks to household staples, we keep the shelves stocked with what your day actually calls for.</p>
-      <div class="services-grid">
-
-        <div class="service-card">
-          <span class="service-icon">🥤</span>
-          <div class="service-title">Beverages &amp; Drinks</div>
-          <p class="service-desc">Cold sodas, juices, energy drinks, water, and more — grab a refreshing drink on the go anytime.</p>
-        </div>
-
-        <div class="service-card">
-          <span class="service-icon">🍫</span>
-          <div class="service-title">Snacks &amp; Candy</div>
-          <p class="service-desc">A wide variety of chips, crackers, candy bars, and packaged snacks to satisfy any craving.</p>
-        </div>
-
-        <div class="service-card">
-          <span class="service-icon">🛒</span>
-          <div class="service-title">Household Staples</div>
-          <p class="service-desc">Common household goods and personal care items when you need them most — no big-box trip required.</p>
-        </div>
-
-        <div class="service-card">
-          <span class="service-icon">🗞️</span>
-          <div class="service-title">Tobacco &amp; Accessories</div>
-          <p class="service-desc">Tobacco products and related accessories available for adult shoppers. Contact us for available selections.</p>
-        </div>
-
-        <div class="service-card">
-          <span class="service-icon">🔋</span>
-          <div class="service-title">Grab-and-Go Items</div>
-          <p class="service-desc">Batteries, phone chargers, and other quick-fix essentials that save you a longer errand run.</p>
-        </div>
-
-        <div class="service-card">
-          <span class="service-icon">💳</span>
-          <div class="service-title">Lottery &amp; Prepaid</div>
-          <p class="service-desc">Lottery tickets and prepaid card options available in store. Contact us for details on current offerings.</p>
-        </div>
-
-      </div>
+  <section class="offers" id="offer">
+    <span class="kick">What We Offer</span>
+    <h2 class="h2">Everyday Essentials, <em>All in One Place</em></h2>
+    <p class="lead">From snacks to household staples, we keep the shelves stocked with what your day actually calls for.</p>
+    <div class="offer-grid">
+      <div class="oc"><div class="em">🥤</div><h3>Beverages &amp; Drinks</h3><p>Cold sodas, juices, energy drinks, water, and more — grab a refreshing drink on the go anytime.</p></div>
+      <div class="oc"><div class="em">🍫</div><h3>Snacks &amp; Candy</h3><p>A wide variety of chips, crackers, candy bars, and packaged snacks to satisfy any craving.</p></div>
+      <div class="oc"><div class="em">🛒</div><h3>Household Staples</h3><p>Common household goods and personal care items when you need them most — no big-box trip required.</p></div>
+      <div class="oc"><div class="em">🗞️</div><h3>Tobacco &amp; Accessories</h3><p>Tobacco products and related accessories available for adult shoppers. Contact us for available selections.</p></div>
+      <div class="oc"><div class="em">🔋</div><h3>Grab-and-Go Items</h3><p>Batteries, phone chargers, and other quick-fix essentials that save you a longer errand run.</p></div>
+      <div class="oc"><div class="em">💳</div><h3>Lottery &amp; Prepaid</h3><p>Lottery tickets and prepaid card options available in store. Contact us for details on current offerings.</p></div>
     </div>
   </section>
 
-  <!-- CONTACT -->
-  <section id="contact">
-    <div class="container">
-      <span class="section-label">Get In Touch</span>
-      <h2 class="section-title">Find West Neighhour</h2>
-      <p class="section-sub">Stop by or give us a call — we are conveniently located on West University Ave in Gainesville.</p>
-
-      <div class="contact-grid">
-        <div class="contact-info">
-
-          <div class="contact-item">
-            <div class="contact-item-icon">📍</div>
-            <div>
-              <div class="contact-item-label">Address</div>
-              <div class="contact-item-value">7114 W University Ave<br>Gainesville, FL</div>
-            </div>
-          </div>
-
-          <div class="contact-item">
-            <div class="contact-item-icon">📞</div>
-            <div>
-              <div class="contact-item-label">Phone</div>
-              <div class="contact-item-value">
-                <a href="tel:+13523330533">(352) 333-0533</a>
-              </div>
-            </div>
-          </div>
-
-          <div class="contact-item">
-            <div class="contact-item-icon">🕐</div>
-            <div>
-              <div class="contact-item-label">Hours</div>
-              <div class="contact-item-value">Contact us for current hours</div>
-            </div>
-          </div>
-
-        </div>
-
-        <div class="rating-box">
-          <div class="rating-stars">⭐⭐⭐</div>
-          <div class="rating-number">3.0</div>
-          <div class="rating-label">Google Maps Rating &bull; 2 reviews</div>
-          <a
-            href="https://www.google.com/maps/search/West%20Neighhour%207114%20W%20University%20Ave"
-            target="_blank"
-            rel="noopener noreferrer"
-            class="directions-btn"
-          >
-            📍 Get Directions
-          </a>
-          <div class="rating-source">Rating sourced from Google Maps</div>
-        </div>
+  <section class="contact" id="contact">
+    <span class="kick">Get In Touch</span>
+    <h2 class="h2">Find <em>West Neighhour</em></h2>
+    <p class="lead">Stop by or give us a call — we're conveniently located on West University Ave in Gainesville.</p>
+    <div class="contact-grid">
+      <div>
+        <div class="cline"><div class="ci">📍</div><div><b>Address</b><span>7114 W University Ave<br>Gainesville, FL</span></div></div>
+        <div class="cline"><div class="ci">📞</div><div><b>Phone</b><a href="tel:+13523330533">(352) 333-0533</a></div></div>
+        <div class="cline"><div class="ci">🕐</div><div><b>Hours</b><span>Contact us for current hours</span></div></div>
+      </div>
+      <div class="ratecard">
+        <div class="rstars">&#9733;&#9733;&#9733;&#9734;&#9734;</div>
+        <div class="score">3.0</div>
+        <small>Google Maps Rating &bull; 2 reviews</small>
+        <a href="https://www.google.com/maps/search/West%20Neighhour%207114%20W%20University%20Ave" target="_blank" rel="noopener noreferrer" class="dir">📍 Get Directions</a>
       </div>
     </div>
   </section>
+</main>
 
-  <!-- FOOTER -->
-  <footer>
-    <p><strong>West Neighhour</strong> &bull; 7114 W University Ave, Gainesville, FL &bull; <a href="tel:+13523330533" style="color:rgba(255,255,255,.5);text-decoration:none;">(352) 333-0533</a></p>
-    <p style="margin-top:0.5rem;">© 2026 West Neighhour. All rights reserved.</p>
-  </footer>
+<footer>
+  <strong>West Neighhour</strong> &bull; 7114 W University Ave, Gainesville, FL &bull; <a href="tel:+13523330533">(352) 333-0533</a> &bull; &copy; 2026 West Neighhour. All rights reserved.
+</footer>
 
-  <script>
-    const hamburger = document.getElementById('hamburger');
-    const navLinks  = document.getElementById('nav-links');
-    hamburger.addEventListener('click', () => navLinks.classList.toggle('open'));
-    navLinks.querySelectorAll('a').forEach(a => a.addEventListener('click', () => navLinks.classList.remove('open')));
-  </script>
+<script>
+(function(){
+  var burger=document.getElementById('burger'),nav=document.getElementById('railNav');
+  burger.addEventListener('click',function(){nav.classList.toggle('open');});
+  nav.querySelectorAll('a').forEach(function(a){a.addEventListener('click',function(){nav.classList.remove('open');});});
 
+  var reduce=window.matchMedia('(prefers-reduced-motion:reduce)').matches;
+  if(!reduce){
+    var cards=document.querySelectorAll('.oc');var vh=window.innerHeight;
+    cards.forEach(function(c,i){c.dataset.i=i;if(c.getBoundingClientRect().top>vh*0.82)c.classList.add('hide');});
+    var io=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting){
+      var el=e.target;setTimeout(function(){el.classList.remove('hide');},(parseInt(el.dataset.i)||0)*90);io.unobserve(el);}});},{threshold:.2});
+    cards.forEach(function(c){if(c.classList.contains('hide'))io.observe(c);});
+  }
+
+  // scroll spy for rail nav
+  var linkMap={};
+  nav.querySelectorAll('a').forEach(function(a){linkMap[a.dataset.sec]=a;});
+  var secs=document.querySelectorAll('section[id]');
+  var spy=new IntersectionObserver(function(es){
+    es.forEach(function(e){
+      if(e.isIntersecting){
+        Object.keys(linkMap).forEach(function(k){linkMap[k].classList.remove('active');});
+        if(linkMap[e.target.id])linkMap[e.target.id].classList.add('active');
+      }
+    });
+  },{rootMargin:'-45% 0px -45% 0px'});
+  secs.forEach(function(s){spy.observe(s);});
+})();
+</script>
 </body>
 </html>
