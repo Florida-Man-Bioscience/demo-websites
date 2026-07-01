@@ -280,7 +280,7 @@
 
 <script>
 (function(){
-  var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
   // mobile menu
   var burger=document.getElementById('burger'),menu=document.getElementById('menu');
@@ -296,7 +296,6 @@
         if(e.isIntersecting){
           var t=e.target, i=tiles.indexOf(t);
           setTimeout(function(){t.classList.add('in');}, Math.min(i,6)*70);
-          if(t.querySelector('#scoreNum')||t.id==='scoreNum'){}
           io.unobserve(t);
         }
       });
