@@ -1,801 +1,281 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>JP Pressure Washing & Landscape Services | Gainesville, FL</title>
-  <style>
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
-    :root {
-      --green-dark: #2d5a1b;
-      --green-mid: #4a8a2a;
-      --green-light: #6db84a;
-      --earth-brown: #6b4c2a;
-      --earth-light: #c9a97a;
-      --cream: #f5f0e8;
-      --white: #ffffff;
-      --gray-light: #f0ede6;
-      --gray-mid: #888;
-      --text-dark: #1e2a14;
-      --text-body: #3a3a2e;
-      --shadow: 0 4px 20px rgba(0,0,0,0.12);
-    }
-
-    html { scroll-behavior: smooth; }
-
-    body {
-      font-family: 'Georgia', 'Times New Roman', serif;
-      color: var(--text-body);
-      background: var(--cream);
-      line-height: 1.7;
-    }
-
-    /* ── NAV ── */
-    nav {
-      position: fixed;
-      top: 0;
-      left: 0;
-      right: 0;
-      z-index: 999;
-      background: var(--green-dark);
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 0 2rem;
-      height: 68px;
-      box-shadow: 0 2px 12px rgba(0,0,0,0.25);
-    }
-
-    .nav-logo {
-      display: flex;
-      align-items: center;
-      gap: 0.75rem;
-      text-decoration: none;
-    }
-
-    .nav-logo-icon {
-      width: 42px;
-      height: 42px;
-      background: var(--green-light);
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 1.3rem;
-      flex-shrink: 0;
-    }
-
-    .nav-logo-text {
-      color: var(--white);
-      font-size: 1.05rem;
-      font-weight: bold;
-      line-height: 1.2;
-      letter-spacing: 0.01em;
-    }
-
-    .nav-logo-text span {
-      display: block;
-      font-size: 0.7rem;
-      font-weight: normal;
-      color: var(--earth-light);
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-    }
-
-    .nav-links {
-      display: flex;
-      gap: 2rem;
-      list-style: none;
-    }
-
-    .nav-links a {
-      color: var(--earth-light);
-      text-decoration: none;
-      font-size: 0.88rem;
-      text-transform: uppercase;
-      letter-spacing: 0.07em;
-      transition: color 0.2s;
-    }
-
-    .nav-links a:hover { color: var(--white); }
-
-    .nav-cta {
-      background: var(--green-light);
-      color: var(--white) !important;
-      padding: 0.45rem 1.1rem;
-      border-radius: 4px;
-      font-weight: bold;
-    }
-
-    .nav-cta:hover { background: var(--green-mid); color: var(--white) !important; }
-
-    .hamburger {
-      display: none;
-      flex-direction: column;
-      gap: 5px;
-      cursor: pointer;
-      background: none;
-      border: none;
-      padding: 4px;
-    }
-    .hamburger span {
-      display: block;
-      width: 26px;
-      height: 2px;
-      background: var(--earth-light);
-      border-radius: 2px;
-      transition: background 0.2s;
-    }
-    .hamburger:hover span { background: var(--white); }
-
-    /* ── MOBILE NAV ── */
-    @media (max-width: 760px) {
-      .nav-links {
-        display: none;
-        flex-direction: column;
-        position: absolute;
-        top: 68px;
-        left: 0;
-        right: 0;
-        background: var(--green-dark);
-        padding: 1rem 2rem 1.5rem;
-        gap: 1.1rem;
-        border-top: 1px solid rgba(255,255,255,0.1);
-      }
-      .nav-links.open { display: flex; }
-      .hamburger { display: flex; }
-    }
-
-    /* ── HERO ── */
-    .hero {
-      margin-top: 68px;
-      min-height: calc(100vh - 68px);
-      background:
-        linear-gradient(to bottom, rgba(30,42,20,0.72) 0%, rgba(45,90,27,0.55) 60%, rgba(45,90,27,0.75) 100%),
-        url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='600'%3E%3Crect fill='%234a8a2a' width='800' height='600'/%3E%3Cellipse cx='200' cy='500' rx='220' ry='140' fill='%232d5a1b'/%3E%3Cellipse cx='600' cy='520' rx='250' ry='120' fill='%232d5a1b'/%3E%3Cellipse cx='400' cy='480' rx='180' ry='110' fill='%233a7022'/%3E%3Crect x='0' y='460' width='800' height='140' fill='%231a3a10'/%3E%3Ccircle cx='100' cy='200' r='80' fill='%233a7022'/%3E%3Ccircle cx='700' cy='180' r='100' fill='%232d5a1b'/%3E%3Ccircle cx='400' cy='150' r='70' fill='%234a8a2a'/%3E%3C/svg%3E")
-        center / cover no-repeat;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      text-align: center;
-      padding: 3rem 1.5rem;
-      position: relative;
-    }
-
-    .hero-badge {
-      display: inline-block;
-      background: var(--earth-light);
-      color: var(--earth-brown);
-      font-size: 0.75rem;
-      font-weight: bold;
-      text-transform: uppercase;
-      letter-spacing: 0.12em;
-      padding: 0.35rem 1rem;
-      border-radius: 50px;
-      margin-bottom: 1.2rem;
-    }
-
-    .hero h1 {
-      font-size: clamp(2rem, 5.5vw, 3.8rem);
-      color: var(--white);
-      line-height: 1.15;
-      margin-bottom: 1rem;
-      text-shadow: 0 2px 10px rgba(0,0,0,0.4);
-    }
-
-    .hero h1 em {
-      font-style: normal;
-      color: var(--earth-light);
-    }
-
-    .hero p {
-      font-size: clamp(1rem, 2.2vw, 1.3rem);
-      color: rgba(255,255,255,0.88);
-      max-width: 580px;
-      margin: 0 auto 2.2rem;
-    }
-
-    .hero-btns {
-      display: flex;
-      gap: 1rem;
-      justify-content: center;
-      flex-wrap: wrap;
-    }
-
-    .btn-primary {
-      background: var(--green-light);
-      color: var(--white);
-      padding: 0.85rem 2rem;
-      border-radius: 6px;
-      text-decoration: none;
-      font-size: 1rem;
-      font-weight: bold;
-      letter-spacing: 0.03em;
-      transition: background 0.2s, transform 0.15s;
-      display: inline-block;
-    }
-    .btn-primary:hover { background: var(--green-mid); transform: translateY(-2px); }
-
-    .btn-outline {
-      background: transparent;
-      color: var(--white);
-      border: 2px solid rgba(255,255,255,0.65);
-      padding: 0.85rem 2rem;
-      border-radius: 6px;
-      text-decoration: none;
-      font-size: 1rem;
-      font-weight: bold;
-      transition: background 0.2s, border-color 0.2s, transform 0.15s;
-      display: inline-block;
-    }
-    .btn-outline:hover {
-      background: rgba(255,255,255,0.12);
-      border-color: var(--white);
-      transform: translateY(-2px);
-    }
-
-    /* ── SECTIONS ── */
-    section { padding: 5rem 1.5rem; }
-
-    .container {
-      max-width: 1100px;
-      margin: 0 auto;
-    }
-
-    .section-tag {
-      display: inline-block;
-      background: var(--green-dark);
-      color: var(--earth-light);
-      font-size: 0.72rem;
-      font-weight: bold;
-      text-transform: uppercase;
-      letter-spacing: 0.14em;
-      padding: 0.3rem 0.9rem;
-      border-radius: 3px;
-      margin-bottom: 0.9rem;
-    }
-
-    .section-title {
-      font-size: clamp(1.6rem, 3.5vw, 2.5rem);
-      color: var(--green-dark);
-      margin-bottom: 1rem;
-      line-height: 1.2;
-    }
-
-    .section-subtitle {
-      color: var(--gray-mid);
-      font-size: 1.05rem;
-      max-width: 560px;
-    }
-
-    /* ── ABOUT ── */
-    #about { background: var(--white); }
-
-    .about-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 4rem;
-      align-items: center;
-    }
-
-    .about-visual {
-      background: linear-gradient(135deg, var(--green-dark) 0%, var(--green-mid) 60%, var(--green-light) 100%);
-      border-radius: 12px;
-      min-height: 320px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      position: relative;
-      overflow: hidden;
-      box-shadow: var(--shadow);
-    }
-
-    .about-visual-inner {
-      text-align: center;
-      color: var(--white);
-      padding: 2rem;
-    }
-
-    .about-visual-icon {
-      font-size: 4rem;
-      display: block;
-      margin-bottom: 0.75rem;
-    }
-
-    .about-visual-label {
-      font-size: 1.1rem;
-      font-weight: bold;
-      letter-spacing: 0.05em;
-    }
-
-    .about-visual-sub {
-      font-size: 0.85rem;
-      color: var(--earth-light);
-      margin-top: 0.3rem;
-    }
-
-    .about-stats {
-      display: flex;
-      gap: 2rem;
-      margin-top: 2.2rem;
-      flex-wrap: wrap;
-    }
-
-    .stat {
-      text-align: center;
-    }
-
-    .stat-num {
-      font-size: 2rem;
-      font-weight: bold;
-      color: var(--green-dark);
-      line-height: 1;
-    }
-
-    .stat-label {
-      font-size: 0.78rem;
-      color: var(--gray-mid);
-      text-transform: uppercase;
-      letter-spacing: 0.08em;
-      margin-top: 0.25rem;
-    }
-
-    .about-text p {
-      margin-bottom: 1.1rem;
-      font-size: 1.02rem;
-      color: var(--text-body);
-    }
-
-    @media (max-width: 700px) {
-      .about-grid { grid-template-columns: 1fr; gap: 2rem; }
-      .about-visual { min-height: 200px; }
-    }
-
-    /* ── SERVICES ── */
-    #services { background: var(--gray-light); }
-
-    .services-header { text-align: center; margin-bottom: 3rem; }
-    .services-header .section-subtitle { margin: 0 auto; }
-
-    .services-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-      gap: 1.5rem;
-    }
-
-    .service-card {
-      background: var(--white);
-      border-radius: 10px;
-      padding: 2rem 1.8rem;
-      box-shadow: 0 2px 12px rgba(0,0,0,0.07);
-      border-top: 4px solid var(--green-light);
-      transition: transform 0.2s, box-shadow 0.2s;
-    }
-
-    .service-card:hover {
-      transform: translateY(-4px);
-      box-shadow: 0 8px 28px rgba(0,0,0,0.13);
-    }
-
-    .service-icon {
-      font-size: 2.2rem;
-      margin-bottom: 0.9rem;
-      display: block;
-    }
-
-    .service-card h3 {
-      font-size: 1.1rem;
-      color: var(--green-dark);
-      margin-bottom: 0.6rem;
-    }
-
-    .service-card p {
-      font-size: 0.93rem;
-      color: var(--gray-mid);
-      line-height: 1.6;
-    }
-
-    .service-detail {
-      margin-top: 0.9rem;
-      font-size: 0.82rem;
-      color: var(--earth-brown);
-      font-style: italic;
-    }
-
-    /* ── CONTACT ── */
-    #contact { background: var(--white); }
-
-    .contact-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 4rem;
-      align-items: start;
-    }
-
-    .contact-info h2 { margin-bottom: 0.5rem; }
-    .contact-info .section-subtitle { margin-bottom: 2rem; }
-
-    .contact-item {
-      display: flex;
-      gap: 1rem;
-      align-items: flex-start;
-      margin-bottom: 1.5rem;
-    }
-
-    .contact-icon {
-      width: 44px;
-      height: 44px;
-      background: var(--green-dark);
-      color: var(--white);
-      border-radius: 8px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 1.2rem;
-      flex-shrink: 0;
-    }
-
-    .contact-item-body strong {
-      display: block;
-      font-size: 0.78rem;
-      text-transform: uppercase;
-      letter-spacing: 0.1em;
-      color: var(--gray-mid);
-      margin-bottom: 0.2rem;
-    }
-
-    .contact-item-body a {
-      color: var(--green-dark);
-      text-decoration: none;
-      font-size: 1.05rem;
-      font-weight: bold;
-    }
-    .contact-item-body a:hover { text-decoration: underline; }
-
-    .contact-item-body p {
-      font-size: 1rem;
-      color: var(--text-body);
-      line-height: 1.5;
-    }
-
-    .rating-box {
-      background: var(--gray-light);
-      border-radius: 10px;
-      padding: 1.5rem;
-      margin-top: 1.5rem;
-      display: flex;
-      align-items: center;
-      gap: 1.2rem;
-    }
-
-    .rating-score {
-      font-size: 2.8rem;
-      font-weight: bold;
-      color: var(--green-dark);
-      line-height: 1;
-    }
-
-    .rating-stars {
-      color: #f5a623;
-      font-size: 1.4rem;
-      letter-spacing: 0.05em;
-    }
-
-    .rating-label {
-      font-size: 0.82rem;
-      color: var(--gray-mid);
-      margin-top: 0.2rem;
-    }
-
-    .contact-cta {
-      background: var(--gray-light);
-      border-radius: 12px;
-      padding: 2.5rem;
-      text-align: center;
-    }
-
-    .contact-cta h3 {
-      font-size: 1.5rem;
-      color: var(--green-dark);
-      margin-bottom: 0.7rem;
-    }
-
-    .contact-cta p {
-      color: var(--gray-mid);
-      margin-bottom: 1.8rem;
-      font-size: 0.97rem;
-    }
-
-    .btn-directions {
-      background: var(--earth-brown);
-      color: var(--white);
-      padding: 0.85rem 2rem;
-      border-radius: 6px;
-      text-decoration: none;
-      font-size: 1rem;
-      font-weight: bold;
-      display: inline-block;
-      transition: background 0.2s, transform 0.15s;
-      margin-bottom: 1rem;
-      width: 100%;
-    }
-    .btn-directions:hover { background: #7a5a35; transform: translateY(-2px); }
-
-    .btn-call {
-      background: var(--green-dark);
-      color: var(--white);
-      padding: 0.85rem 2rem;
-      border-radius: 6px;
-      text-decoration: none;
-      font-size: 1rem;
-      font-weight: bold;
-      display: inline-block;
-      transition: background 0.2s, transform 0.15s;
-      width: 100%;
-    }
-    .btn-call:hover { background: var(--green-mid); transform: translateY(-2px); }
-
-    .cta-note {
-      font-size: 0.82rem;
-      color: var(--gray-mid);
-      margin-top: 1rem;
-      font-style: italic;
-    }
-
-    @media (max-width: 700px) {
-      .contact-grid { grid-template-columns: 1fr; gap: 2rem; }
-    }
-
-    /* ── FOOTER ── */
-    footer {
-      background: var(--green-dark);
-      color: rgba(255,255,255,0.65);
-      text-align: center;
-      padding: 2.5rem 1.5rem;
-    }
-
-    .footer-name {
-      font-size: 1.1rem;
-      font-weight: bold;
-      color: var(--white);
-      margin-bottom: 0.4rem;
-    }
-
-    .footer-address {
-      font-size: 0.88rem;
-      margin-bottom: 0.3rem;
-    }
-
-    .footer-phone a {
-      color: var(--earth-light);
-      text-decoration: none;
-      font-size: 0.9rem;
-    }
-    .footer-phone a:hover { text-decoration: underline; }
-
-    .footer-divider {
-      border: none;
-      border-top: 1px solid rgba(255,255,255,0.12);
-      margin: 1.2rem auto;
-      max-width: 300px;
-    }
-
-    .footer-copy {
-      font-size: 0.78rem;
-      color: rgba(255,255,255,0.35);
-    }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>JP Pressure Washing &amp; Landscape Services | Gainesville, FL</title>
+<style>
+  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+  :root{
+    --ink:#0a1c0d; --moss:#123a18; --leaf:#1f7a2b; --grass:#3fae44;
+    --lime:#86d94a; --neon:#caff63; --foam:#bdeaff; --pale:#eafce0; --paper:#f3f9ec;
+    --font:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+  }
+  html{scroll-behavior:smooth}
+  body{font-family:var(--font);background:var(--ink);color:var(--pale);line-height:1.6;overflow-x:hidden}
+  a{color:inherit;text-decoration:none}
+  ::selection{background:var(--neon);color:var(--ink)}
+
+  /* Progress + brand */
+  .topbar{position:fixed;top:0;left:0;right:0;z-index:60;display:flex;align-items:center;justify-content:space-between;
+    padding:.85rem 1.4rem;background:rgba(10,28,13,.62);backdrop-filter:blur(12px);border-bottom:1px solid rgba(202,255,99,.16)}
+  .brand{display:flex;align-items:center;gap:.6rem;font-weight:800;font-size:1rem;line-height:1.1}
+  .brand small{display:block;font-weight:500;font-size:.6rem;letter-spacing:.2em;color:var(--lime);text-transform:uppercase}
+  .mark{width:34px;height:34px;border-radius:10px;background:linear-gradient(135deg,var(--grass),var(--foam));display:grid;place-items:center;flex-shrink:0}
+  .progress{position:fixed;top:0;left:0;height:3px;width:0;z-index:70;background:linear-gradient(90deg,var(--grass),var(--neon),var(--foam))}
+  .hint{display:flex;align-items:center;gap:.4rem;font-size:.72rem;letter-spacing:.16em;text-transform:uppercase;color:#bcd6a6}
+  .hint svg{animation:nudge 1.6s ease-in-out infinite}
+  @keyframes nudge{0%,100%{transform:translateX(0)}50%{transform:translateX(5px)}}
+
+  /* Horizontal track */
+  .track{display:flex;height:100svh;overflow-x:auto;overflow-y:hidden;scroll-snap-type:x mandatory;scroll-behavior:smooth}
+  .track::-webkit-scrollbar{height:0}
+  .panel{flex:0 0 100%;width:100vw;height:100svh;scroll-snap-align:start;position:relative;
+    display:grid;place-items:center;padding:6rem 1.6rem 3rem}
+  .panel-inner{width:100%;max-width:1080px}
+
+  /* Intro panel */
+  .p-intro{background:
+     radial-gradient(90% 70% at 80% 10%, rgba(63,174,68,.34), transparent 60%),
+     radial-gradient(80% 60% at 10% 90%, rgba(189,234,255,.18), transparent 60%),
+     linear-gradient(160deg,#0a1c0d,#123a18)}
+  .badge{display:inline-block;font-size:.74rem;letter-spacing:.28em;text-transform:uppercase;color:var(--neon);
+     border:1px solid rgba(202,255,99,.4);border-radius:999px;padding:.5rem 1.1rem;margin-bottom:1.4rem}
+  h1{font-size:clamp(2.4rem,7vw,5rem);line-height:.98;font-weight:800;letter-spacing:-.02em;max-width:14ch;
+     background:linear-gradient(100deg,#fff,var(--neon),var(--foam));-webkit-background-clip:text;background-clip:text;color:transparent}
+  .lede{margin:1.3rem 0 2rem;max-width:52ch;font-size:clamp(1rem,2.3vw,1.2rem);color:#dff2cf}
+  .cta-row{display:flex;gap:1rem;flex-wrap:wrap}
+  .btn{display:inline-flex;align-items:center;gap:.5rem;font-weight:700;padding:.9rem 1.6rem;border-radius:999px;
+     font-size:.95rem;border:none;cursor:pointer;transition:transform .25s cubic-bezier(.2,.9,.2,1.4),box-shadow .25s}
+  .btn-primary{background:var(--neon);color:var(--ink);box-shadow:0 10px 28px rgba(202,255,99,.32)}
+  .btn-ghost{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.22);color:var(--pale)}
+  .btn:hover{transform:translateY(-3px) scale(1.03)}
+  .water-row{display:flex;gap:1.4rem;margin-top:2.4rem;flex-wrap:wrap}
+  .chip{display:flex;align-items:center;gap:.5rem;font-size:.9rem;color:#cfe6bd}
+  .chip b{color:var(--neon)}
+
+  /* About panel */
+  .p-about{background:linear-gradient(150deg,#0d2512,#15431f)}
+  .about-grid{display:grid;grid-template-columns:1.2fr .8fr;gap:2.6rem;align-items:center}
+  .about-grid p{color:#cfe6bd;margin-bottom:1rem;max-width:60ch}
+  .kicker{font-size:.74rem;letter-spacing:.3em;text-transform:uppercase;color:var(--lime);font-weight:700;margin-bottom:.7rem}
+  h2{font-size:clamp(1.8rem,4.4vw,3rem);line-height:1.04;font-weight:800;letter-spacing:-.01em;color:#f3ffe4}
+  .metrics{display:grid;gap:1rem}
+  .metric{background:rgba(255,255,255,.04);border:1px solid rgba(202,255,99,.2);border-radius:16px;padding:1.3rem;text-align:center}
+  .metric b{display:block;font-size:2rem;color:var(--neon);line-height:1}
+  .metric .stars{color:var(--neon);letter-spacing:.12em}
+  .metric span{font-size:.86rem;color:#bcd6a6}
+
+  /* Services panels */
+  .p-svc{background:linear-gradient(160deg,#0a1c0d,#103317)}
+  .svc-wide{display:grid;grid-template-columns:1fr 1fr 1fr;gap:1.3rem}
+  .svc{position:relative;background:linear-gradient(160deg,rgba(255,255,255,.05),rgba(255,255,255,.01));
+     border:1px solid rgba(255,255,255,.1);border-radius:18px;padding:1.6rem;overflow:hidden;transition:border-color .3s,transform .3s}
+  .svc:hover{border-color:var(--neon);transform:translateY(-5px)}
+  .svc svg{width:42px;height:42px;margin-bottom:.6rem}
+  .svc h3{font-size:1.12rem;color:#f0ffe0;margin-bottom:.4rem}
+  .svc p{font-size:.9rem;color:#c2d8b0}
+  .svc .tag{margin-top:.7rem;font-size:.74rem;letter-spacing:.12em;text-transform:uppercase;color:var(--lime)}
+  .panel-head{margin-bottom:1.8rem}
+
+  /* Contact panel */
+  .p-contact{background:
+     radial-gradient(80% 70% at 50% 0%, rgba(63,174,68,.3), transparent 60%),
+     linear-gradient(160deg,#0d2512,#0a1c0d)}
+  .contact-grid{display:grid;grid-template-columns:1fr 1fr;gap:2rem;margin-top:1.6rem}
+  .info-card{background:rgba(255,255,255,.04);border:1px solid rgba(202,255,99,.2);border-radius:20px;padding:1.8rem}
+  .info-row{padding:.9rem 0;border-bottom:1px solid rgba(255,255,255,.08)}
+  .info-row:last-child{border-bottom:none}
+  .info-row .lbl{font-size:.7rem;letter-spacing:.18em;text-transform:uppercase;color:var(--lime)}
+  .info-row .val{font-size:1.02rem;color:#f0ffe0;font-weight:600;margin-top:.15rem}
+  .rate{display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;
+     background:linear-gradient(150deg,rgba(63,174,68,.25),rgba(10,28,13,.4));border:1px solid rgba(202,255,99,.25);border-radius:20px;padding:2rem}
+  .rate .big{font-size:3.6rem;font-weight:800;color:var(--neon);line-height:1}
+  .rate .stars{font-size:1.4rem;color:var(--neon);letter-spacing:.14em;margin:.3rem 0}
+  .rate .meta{font-size:.9rem;color:#cfe6bd}
+  .foot{margin-top:1.8rem;text-align:center;font-size:.85rem;color:#9bbf82}
+  .foot a{color:var(--lime)}
+
+  /* Dots nav */
+  .dots{position:fixed;bottom:1.3rem;left:50%;transform:translateX(-50%);z-index:60;display:flex;gap:.6rem;
+     background:rgba(10,28,13,.6);backdrop-filter:blur(10px);padding:.55rem .8rem;border-radius:999px;border:1px solid rgba(202,255,99,.18)}
+  .dots button{width:10px;height:10px;border-radius:50%;border:none;background:rgba(255,255,255,.25);cursor:pointer;transition:transform .25s,background .25s;padding:0}
+  .dots button.active{background:var(--neon);transform:scale(1.4)}
+
+  @media(max-width:820px){
+    .panel{height:auto;min-height:100svh}
+    .about-grid,.contact-grid{grid-template-columns:1fr}
+    .svc-wide{grid-template-columns:1fr}
+  }
+  @media(prefers-reduced-motion:reduce){
+    *{animation:none!important;transition:none!important}
+    html,.track{scroll-behavior:auto}
+    .track{scroll-snap-type:none}
+  }
+</style>
 </head>
 <body>
+<div class="progress" id="progress"></div>
+<header class="topbar">
+  <a class="brand" href="#" id="brandTop">
+    <span class="mark"><svg width="20" height="20" viewBox="0 0 24 24" fill="#0a1c0d"><path d="M12 2C8 7 6 10 6 14a6 6 0 0 0 12 0c0-4-2-7-6-12Z"/><path d="M16 16c2 1 3 3 3 5" stroke="#0a1c0d" stroke-width="1.6" fill="none" stroke-linecap="round"/></svg></span>
+    <span>JP Pressure Washing<small>&amp; Landscape Services</small></span>
+  </a>
+  <div class="hint">Scroll <svg width="22" height="14" viewBox="0 0 22 14" fill="none" stroke="#caff63" stroke-width="2" stroke-linecap="round"><path d="M2 7h16M13 2l5 5-5 5"/></svg></div>
+</header>
 
-  <!-- NAV -->
-  <nav>
-    <a href="#" class="nav-logo">
-      <div class="nav-logo-icon">&#127807;</div>
-      <div class="nav-logo-text">
-        JP Pressure Washing
-        <span>&amp; Landscape Services</span>
+<div class="track" id="track">
+  <!-- 1: INTRO -->
+  <section class="panel p-intro" id="p1">
+    <div class="panel-inner">
+      <span class="badge">Gainesville, FL • 5.0 ★ Rated</span>
+      <h1>Your Property, Cleaned &amp; Beautifully Kept</h1>
+      <p class="lede">Expert pressure washing and full-service landscaping to keep your home or business looking its absolute best — year round.</p>
+      <div class="cta-row">
+        <a class="btn btn-primary" href="tel:+13866287663">Get a Free Quote</a>
+        <a class="btn btn-ghost" href="#p3">Our Services</a>
       </div>
-    </a>
-    <button class="hamburger" id="hamburger" aria-label="Toggle menu">
-      <span></span><span></span><span></span>
-    </button>
-    <ul class="nav-links" id="nav-links">
-      <li><a href="#about">About</a></li>
-      <li><a href="#services">Services</a></li>
-      <li><a href="#contact" class="nav-cta">Get a Quote</a></li>
-    </ul>
-  </nav>
-
-  <!-- HERO -->
-  <section class="hero">
-    <div>
-      <div class="hero-badge">Gainesville, FL &bull; 5.0 &#9733; Rated</div>
-      <h1>Your Property,<br><em>Cleaned &amp; Beautifully Kept</em></h1>
-      <p>Expert pressure washing and full-service landscaping to keep your home or business looking its absolute best — year round.</p>
-      <div class="hero-btns">
-        <a href="#contact" class="btn-primary">Get a Free Quote</a>
-        <a href="#services" class="btn-outline">Our Services</a>
+      <div class="water-row">
+        <div class="chip"><b>5.0</b> Google Rating</div>
+        <div class="chip"><b>4 reviews</b> on Google Maps</div>
+        <div class="chip"><b>100%</b> Satisfaction Focus</div>
       </div>
     </div>
   </section>
 
-  <!-- ABOUT -->
-  <section id="about">
-    <div class="container">
-      <div class="about-grid">
-        <div class="about-visual">
-          <div class="about-visual-inner">
-            <span class="about-visual-icon">&#127807;</span>
-            <div class="about-visual-label">JP Pressure Washing</div>
-            <div class="about-visual-sub">&amp; Landscape Services</div>
-            <div class="about-visual-sub" style="margin-top:1rem; font-size:0.78rem; opacity:0.75;">Gainesville, FL</div>
-          </div>
-        </div>
-        <div class="about-text">
-          <div class="section-tag">About Us</div>
-          <h2 class="section-title">Trusted Outdoor Care in Gainesville</h2>
+  <!-- 2: ABOUT -->
+  <section class="panel p-about" id="p2">
+    <div class="panel-inner">
+      <div class="kicker">About Us</div>
+      <h2>Trusted Outdoor Care in Gainesville</h2>
+      <div class="about-grid" style="margin-top:1.6rem">
+        <div>
           <p>JP Pressure Washing &amp; Landscape Services provides reliable, high-quality outdoor maintenance for residential and commercial properties throughout the Gainesville area. Whether it's reviving a driveway with a thorough pressure wash or keeping a lawn immaculately trimmed and healthy, our team takes pride in every job we complete.</p>
           <p>We understand that your property's exterior is its first impression, which is why we approach every project with careful attention to detail and a commitment to lasting results. From routine lawn care to one-time deep-cleaning projects, we tailor our services to fit your property's unique needs.</p>
           <p>Locally operated and serving the Gainesville community, we're dedicated to building long-term relationships built on trust, quality workmanship, and consistent results. Contact us for details on scheduling and availability.</p>
-          <div class="about-stats">
-            <div class="stat">
-              <div class="stat-num">5.0</div>
-              <div class="stat-label">Google Rating</div>
-            </div>
-            <div class="stat">
-              <div class="stat-num">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
-              <div class="stat-label">4 Reviews</div>
-            </div>
-            <div class="stat">
-              <div class="stat-num">100%</div>
-              <div class="stat-label">Satisfaction Focus</div>
-            </div>
-          </div>
+        </div>
+        <div class="metrics">
+          <div class="metric"><b>5.0</b><div class="stars">★★★★★</div><span>4 reviews on Google</span></div>
+          <div class="metric"><b>100%</b><span>Satisfaction Focus</span></div>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- SERVICES -->
-  <section id="services">
-    <div class="container">
-      <div class="services-header">
-        <div class="section-tag">What We Do</div>
-        <h2 class="section-title">Our Services</h2>
-        <p class="section-subtitle">From pressure washing driveways to full lawn care maintenance, we offer a complete range of outdoor services to keep your property in top shape.</p>
-      </div>
-      <div class="services-grid">
-
-        <div class="service-card">
-          <span class="service-icon">&#128166;</span>
-          <h3>Pressure Washing</h3>
-          <p>Professional high-pressure cleaning for driveways, sidewalks, patios, fences, siding, and more. We remove dirt, mold, mildew, and grime to restore your surfaces.</p>
-          <p class="service-detail">Contact us for details on pricing and scheduling.</p>
-        </div>
-
-        <div class="service-card">
-          <span class="service-icon">&#9981;</span>
-          <h3>Lawn Mowing &amp; Edging</h3>
-          <p>Regular mowing and precise edging to keep your lawn looking neat, healthy, and well-maintained throughout the growing season.</p>
-          <p class="service-detail">Contact us for details on pricing and scheduling.</p>
-        </div>
-
-        <div class="service-card">
-          <span class="service-icon">&#127807;</span>
-          <h3>Landscaping &amp; Trimming</h3>
-          <p>Shrub and hedge trimming, bed maintenance, and general landscaping work to enhance your property's curb appeal and keep plantings under control.</p>
-          <p class="service-detail">Contact us for details on pricing and scheduling.</p>
-        </div>
-
-        <div class="service-card">
-          <span class="service-icon">&#127810;</span>
-          <h3>Leaf &amp; Debris Removal</h3>
-          <p>Thorough cleanup of fallen leaves, clippings, and yard debris to keep your outdoor spaces clean and your lawn breathing properly.</p>
-          <p class="service-detail">Contact us for details on pricing and scheduling.</p>
-        </div>
-
-        <div class="service-card">
-          <span class="service-icon">&#127749;</span>
-          <h3>Driveway &amp; Surface Cleaning</h3>
-          <p>Specialized cleaning of concrete, pavers, and asphalt surfaces using professional-grade equipment to eliminate stains and restore a fresh appearance.</p>
-          <p class="service-detail">Contact us for details on pricing and scheduling.</p>
-        </div>
-
-        <div class="service-card">
-          <span class="service-icon">&#128336;</span>
-          <h3>Regular Maintenance Programs</h3>
-          <p>Ongoing scheduled lawn care and exterior cleaning programs for homeowners and businesses who want consistent, worry-free upkeep all year long.</p>
-          <p class="service-detail">Contact us for details on pricing and scheduling.</p>
-        </div>
-
+  <!-- 3: SERVICES A -->
+  <section class="panel p-svc" id="p3">
+    <div class="panel-inner">
+      <div class="panel-head"><div class="kicker">What We Do</div><h2>Our Services</h2></div>
+      <div class="svc-wide">
+        <article class="svc"><svg viewBox="0 0 48 48" fill="none" stroke="#caff63" stroke-width="2.4" stroke-linecap="round"><path d="M14 6c-2 6-2 9 0 12M22 4c-2 7-2 11 0 15M30 6c-2 6-2 9 0 12"/><rect x="8" y="22" width="32" height="20" rx="3"/></svg><h3>Pressure Washing</h3><p>Professional high-pressure cleaning for driveways, sidewalks, patios, fences, siding, and more — removing dirt, mold, mildew, and grime to restore your surfaces.</p><div class="tag">Contact us for details</div></article>
+        <article class="svc"><svg viewBox="0 0 48 48" fill="none" stroke="#caff63" stroke-width="2.4" stroke-linecap="round"><path d="M6 38h36M10 38c0-8 5-14 14-14s14 6 14 14"/><path d="M24 24V8"/></svg><h3>Lawn Mowing &amp; Edging</h3><p>Regular mowing and precise edging to keep your lawn looking neat, healthy, and well-maintained throughout the growing season.</p><div class="tag">Contact us for details</div></article>
+        <article class="svc"><svg viewBox="0 0 48 48" fill="none" stroke="#caff63" stroke-width="2.4" stroke-linecap="round"><path d="M24 42V22"/><path d="M24 22c-6-2-9-8-7-14 6 0 10 5 7 14ZM24 26c6-2 9-8 7-14-6 0-10 5-7 14Z"/></svg><h3>Landscaping &amp; Trimming</h3><p>Shrub and hedge trimming, bed maintenance, and general landscaping work to enhance your property's curb appeal and keep plantings under control.</p><div class="tag">Contact us for details</div></article>
       </div>
     </div>
   </section>
 
-  <!-- CONTACT -->
-  <section id="contact">
-    <div class="container">
+  <!-- 4: SERVICES B -->
+  <section class="panel p-svc" id="p4">
+    <div class="panel-inner">
+      <div class="panel-head"><div class="kicker">A Complete Range</div><h2>More Ways We Help</h2></div>
+      <div class="svc-wide">
+        <article class="svc"><svg viewBox="0 0 48 48" fill="none" stroke="#caff63" stroke-width="2.4" stroke-linecap="round"><path d="M12 30c0-6 5-10 12-10M30 12c6 0 10 4 10 10 0 8-8 14-18 14-6 0-12-3-12-8 0-3 3-5 7-5"/></svg><h3>Leaf &amp; Debris Removal</h3><p>Thorough cleanup of fallen leaves, clippings, and yard debris to keep your outdoor spaces clean and your lawn breathing properly.</p><div class="tag">Contact us for details</div></article>
+        <article class="svc"><svg viewBox="0 0 48 48" fill="none" stroke="#caff63" stroke-width="2.4" stroke-linecap="round"><rect x="6" y="28" width="36" height="12" rx="2"/><path d="M12 28l4-10h16l4 10"/></svg><h3>Driveway &amp; Surface Cleaning</h3><p>Specialized cleaning of concrete, pavers, and asphalt surfaces using professional-grade equipment to eliminate stains and restore a fresh appearance.</p><div class="tag">Contact us for details</div></article>
+        <article class="svc"><svg viewBox="0 0 48 48" fill="none" stroke="#caff63" stroke-width="2.4" stroke-linecap="round"><circle cx="24" cy="24" r="16"/><path d="M24 14v10l7 4"/></svg><h3>Regular Maintenance Programs</h3><p>Ongoing scheduled lawn care and exterior cleaning programs for homeowners and businesses who want consistent, worry-free upkeep all year long.</p><div class="tag">Contact us for details</div></article>
+      </div>
+    </div>
+  </section>
+
+  <!-- 5: CONTACT -->
+  <section class="panel p-contact" id="p5">
+    <div class="panel-inner">
+      <div class="kicker">Contact</div>
+      <h2>Get in Touch</h2>
+      <p style="color:#cfe6bd;margin-top:.8rem;max-width:52ch">Ready to schedule a service or get a free quote? Reach out by phone or swing by. Free quotes available — contact us for details on pricing and scheduling.</p>
       <div class="contact-grid">
-        <div class="contact-info">
-          <div class="section-tag">Contact</div>
-          <h2 class="section-title">Get in Touch</h2>
-          <p class="section-subtitle">Ready to schedule a service or get a free quote? Reach out by phone or swing by.</p>
-
-          <div style="margin-top:2rem;">
-            <div class="contact-item">
-              <div class="contact-icon">&#128222;</div>
-              <div class="contact-item-body">
-                <strong>Phone</strong>
-                <a href="tel:+13866287663">(386) 628-7663</a>
-              </div>
-            </div>
-
-            <div class="contact-item">
-              <div class="contact-icon">&#128205;</div>
-              <div class="contact-item-body">
-                <strong>Address</strong>
-                <p>8401 NW 13th St LOT 74<br>Gainesville, FL</p>
-              </div>
-            </div>
-
-            <div class="contact-item">
-              <div class="contact-icon">&#128337;</div>
-              <div class="contact-item-body">
-                <strong>Hours</strong>
-                <p>Contact us for details on current availability.</p>
-              </div>
-            </div>
-          </div>
-
-          <div class="rating-box">
-            <div class="rating-score">5.0</div>
-            <div>
-              <div class="rating-stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
-              <div class="rating-label">Google Maps Rating &bull; 4 reviews</div>
+        <div class="info-card">
+          <div class="info-row"><div class="lbl">Phone</div><div class="val"><a href="tel:+13866287663">(386) 628-7663</a></div></div>
+          <div class="info-row"><div class="lbl">Address</div><div class="val">8401 NW 13th St LOT 74, Gainesville, FL</div></div>
+          <div class="info-row"><div class="lbl">Hours</div><div class="val">Contact us for details on current availability</div></div>
+          <div class="info-row" style="border:none;padding-top:1.2rem">
+            <div class="cta-row">
+              <a class="btn btn-primary" href="tel:+13866287663">Call (386) 628-7663</a>
+              <a class="btn btn-ghost" href="https://www.google.com/maps/search/JP%20Pressure%20Washing%20%26%20Landscape%20Services%208401%20NW%2013th%20St%20LOT%2074" target="_blank" rel="noopener">Get Directions</a>
             </div>
           </div>
         </div>
-
-        <div class="contact-cta">
-          <h3>Find Us &amp; Get a Quote</h3>
-          <p>Call us directly or get directions to our location. We're happy to discuss your lawn care and pressure washing needs.</p>
-          <a
-            href="https://www.google.com/maps/search/JP%20Pressure%20Washing%20%26%20Landscape%20Services%208401%20NW%2013th%20St%20LOT%2074"
-            target="_blank"
-            rel="noopener"
-            class="btn-directions"
-          >
-            &#128205; Get Directions
-          </a>
-          <a href="tel:+13866287663" class="btn-call">
-            &#128222; Call (386) 628-7663
-          </a>
-          <p class="cta-note">Free quotes available — contact us for details on pricing and scheduling.</p>
+        <div class="rate">
+          <div class="stars">★★★★★</div>
+          <div class="big">5.0</div>
+          <div class="meta">Google Maps Rating • 4 reviews</div>
+          <a class="btn btn-primary" style="margin-top:1.2rem" href="https://www.google.com/maps/search/JP%20Pressure%20Washing%20%26%20Landscape%20Services%208401%20NW%2013th%20St%20LOT%2074" target="_blank" rel="noopener">Find Us on Google Maps</a>
         </div>
+      </div>
+      <div class="foot">
+        JP Pressure Washing &amp; Landscape Services — 8401 NW 13th St LOT 74, Gainesville, FL — (386) 628-7663<br>
+        © 2026 JP Pressure Washing &amp; Landscape Services. All rights reserved.
       </div>
     </div>
   </section>
+</div>
 
-  <!-- FOOTER -->
-  <footer>
-    <div class="footer-name">JP Pressure Washing &amp; Landscape Services</div>
-    <div class="footer-address">8401 NW 13th St LOT 74, Gainesville, FL</div>
-    <div class="footer-phone"><a href="tel:+13866287663">(386) 628-7663</a></div>
-    <hr class="footer-divider" />
-    <div class="footer-copy">&copy; 2026 JP Pressure Washing &amp; Landscape Services. All rights reserved.</div>
-  </footer>
+<nav class="dots" id="dots" aria-label="Section navigation"></nav>
 
-  <script>
-    const hamburger = document.getElementById('hamburger');
-    const navLinks = document.getElementById('nav-links');
-    hamburger.addEventListener('click', () => {
-      navLinks.classList.toggle('open');
+<script>
+(function(){
+  var reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var track = document.getElementById('track');
+  var panels = Array.prototype.slice.call(track.querySelectorAll('.panel'));
+  var progress = document.getElementById('progress');
+  var dotsWrap = document.getElementById('dots');
+
+  // build dots
+  panels.forEach(function(p,i){
+    var b=document.createElement('button');
+    b.setAttribute('aria-label','Go to section '+(i+1));
+    b.addEventListener('click',function(){ p.scrollIntoView({behavior:reduce?'auto':'smooth',inline:'start'}); });
+    dotsWrap.appendChild(b);
+  });
+  var dots = Array.prototype.slice.call(dotsWrap.children);
+
+  function update(){
+    var max = track.scrollWidth - track.clientWidth;
+    var pct = max>0 ? track.scrollLeft/max : 0;
+    progress.style.width = (pct*100)+'%';
+    var idx = Math.round(track.scrollLeft / track.clientWidth);
+    dots.forEach(function(d,i){ d.classList.toggle('active', i===idx); });
+  }
+  update();
+  track.addEventListener('scroll', function(){ requestAnimationFrame(update); }, {passive:true});
+  window.addEventListener('resize', update);
+
+  // Translate vertical wheel into horizontal scroll on desktop
+  if(!reduce){
+    track.addEventListener('wheel', function(e){
+      if(Math.abs(e.deltaY) > Math.abs(e.deltaX) && track.clientWidth > 820){
+        track.scrollLeft += e.deltaY;
+        e.preventDefault();
+      }
+    }, {passive:false});
+  }
+
+  // Anchor links inside scroll to panel
+  document.querySelectorAll('a[href^="#p"]').forEach(function(a){
+    a.addEventListener('click', function(e){
+      var t=document.querySelector(a.getAttribute('href'));
+      if(t){ e.preventDefault(); t.scrollIntoView({behavior:reduce?'auto':'smooth',inline:'start'}); }
     });
-    navLinks.querySelectorAll('a').forEach(link => {
-      link.addEventListener('click', () => navLinks.classList.remove('open'));
-    });
-  </script>
+  });
+  document.getElementById('brandTop').addEventListener('click', function(e){
+    e.preventDefault(); panels[0].scrollIntoView({behavior:reduce?'auto':'smooth',inline:'start'});
+  });
+
+  // keyboard arrows
+  window.addEventListener('keydown', function(e){
+    if(e.key==='ArrowRight'){ track.scrollLeft += track.clientWidth; }
+    if(e.key==='ArrowLeft'){ track.scrollLeft -= track.clientWidth; }
+  });
+})();
+</script>
 </body>
 </html>

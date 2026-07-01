@@ -1,870 +1,249 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Hammer Down Lawn Care | Gainesville, FL</title>
-  <style>
-    *, *::before, *::after {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
-
-    :root {
-      --green-dark: #2d5016;
-      --green-mid: #4a7c2f;
-      --green-light: #6aaa3a;
-      --green-pale: #d6ecc4;
-      --earth: #7a5c2e;
-      --earth-light: #b8915a;
-      --cream: #f5f0e8;
-      --white: #ffffff;
-      --charcoal: #2a2a2a;
-      --gray: #555555;
-      --gray-light: #888888;
-    }
-
-    html {
-      scroll-behavior: smooth;
-    }
-
-    body {
-      font-family: 'Segoe UI', Arial, sans-serif;
-      color: var(--charcoal);
-      background: var(--cream);
-      line-height: 1.6;
-    }
-
-    /* NAV */
-    nav {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      z-index: 1000;
-      background: var(--green-dark);
-      padding: 0 2rem;
-      height: 64px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      box-shadow: 0 2px 12px rgba(0,0,0,0.35);
-    }
-
-    .nav-logo {
-      display: flex;
-      align-items: center;
-      gap: 0.6rem;
-      text-decoration: none;
-    }
-
-    .nav-logo-icon {
-      width: 38px;
-      height: 38px;
-      background: var(--green-light);
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 1.3rem;
-      flex-shrink: 0;
-    }
-
-    .nav-logo-text {
-      color: var(--white);
-      font-size: 1.15rem;
-      font-weight: 700;
-      letter-spacing: 0.02em;
-      line-height: 1.2;
-    }
-
-    .nav-logo-text span {
-      display: block;
-      font-size: 0.65rem;
-      font-weight: 400;
-      color: var(--green-pale);
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-    }
-
-    .nav-links {
-      display: flex;
-      gap: 1.8rem;
-      list-style: none;
-    }
-
-    .nav-links a {
-      color: var(--green-pale);
-      text-decoration: none;
-      font-size: 0.9rem;
-      font-weight: 500;
-      letter-spacing: 0.04em;
-      text-transform: uppercase;
-      transition: color 0.2s;
-    }
-
-    .nav-links a:hover {
-      color: var(--green-light);
-    }
-
-    .nav-cta {
-      background: var(--green-light);
-      color: var(--white) !important;
-      padding: 0.45rem 1.1rem;
-      border-radius: 4px;
-      transition: background 0.2s !important;
-    }
-
-    .nav-cta:hover {
-      background: var(--earth) !important;
-      color: var(--white) !important;
-    }
-
-    /* HAMBURGER */
-    .hamburger {
-      display: none;
-      flex-direction: column;
-      gap: 5px;
-      cursor: pointer;
-      background: none;
-      border: none;
-      padding: 4px;
-    }
-
-    .hamburger span {
-      display: block;
-      width: 26px;
-      height: 3px;
-      background: var(--white);
-      border-radius: 2px;
-      transition: all 0.3s;
-    }
-
-    /* HERO */
-    .hero {
-      margin-top: 64px;
-      min-height: calc(100vh - 64px);
-      background: linear-gradient(160deg, var(--green-dark) 0%, var(--green-mid) 55%, var(--green-light) 100%);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      text-align: center;
-      padding: 4rem 2rem;
-      position: relative;
-      overflow: hidden;
-    }
-
-    .hero::before {
-      content: '';
-      position: absolute;
-      bottom: 0;
-      left: 0;
-      width: 100%;
-      height: 120px;
-      background: var(--cream);
-      clip-path: ellipse(60% 100% at 50% 100%);
-    }
-
-    /* Decorative grass blades */
-    .hero-grass {
-      position: absolute;
-      bottom: 0;
-      left: 0;
-      width: 100%;
-      pointer-events: none;
-      overflow: hidden;
-      height: 80px;
-    }
-
-    .hero-content {
-      position: relative;
-      z-index: 2;
-      max-width: 700px;
-    }
-
-    .hero-badge {
-      display: inline-block;
-      background: rgba(255,255,255,0.15);
-      color: var(--green-pale);
-      border: 1px solid rgba(255,255,255,0.3);
-      border-radius: 50px;
-      padding: 0.35rem 1rem;
-      font-size: 0.8rem;
-      letter-spacing: 0.1em;
-      text-transform: uppercase;
-      margin-bottom: 1.5rem;
-      font-weight: 600;
-    }
-
-    .hero h1 {
-      font-size: clamp(2.4rem, 6vw, 4rem);
-      color: var(--white);
-      font-weight: 800;
-      line-height: 1.1;
-      margin-bottom: 1.2rem;
-      text-shadow: 0 2px 12px rgba(0,0,0,0.3);
-      letter-spacing: -0.01em;
-    }
-
-    .hero h1 em {
-      color: var(--green-pale);
-      font-style: normal;
-    }
-
-    .hero p {
-      font-size: clamp(1.05rem, 2.5vw, 1.3rem);
-      color: rgba(255,255,255,0.88);
-      margin-bottom: 2.5rem;
-      max-width: 520px;
-      margin-left: auto;
-      margin-right: auto;
-    }
-
-    .hero-buttons {
-      display: flex;
-      gap: 1rem;
-      justify-content: center;
-      flex-wrap: wrap;
-    }
-
-    .btn-primary {
-      background: var(--white);
-      color: var(--green-dark);
-      padding: 0.85rem 2rem;
-      border-radius: 6px;
-      text-decoration: none;
-      font-weight: 700;
-      font-size: 1rem;
-      letter-spacing: 0.02em;
-      transition: all 0.2s;
-      box-shadow: 0 4px 16px rgba(0,0,0,0.2);
-    }
-
-    .btn-primary:hover {
-      background: var(--green-pale);
-      transform: translateY(-2px);
-      box-shadow: 0 6px 20px rgba(0,0,0,0.25);
-    }
-
-    .btn-outline {
-      background: transparent;
-      color: var(--white);
-      padding: 0.85rem 2rem;
-      border-radius: 6px;
-      text-decoration: none;
-      font-weight: 600;
-      font-size: 1rem;
-      border: 2px solid rgba(255,255,255,0.6);
-      transition: all 0.2s;
-    }
-
-    .btn-outline:hover {
-      background: rgba(255,255,255,0.15);
-      border-color: var(--white);
-    }
-
-    /* SECTIONS COMMON */
-    section {
-      padding: 5rem 2rem;
-    }
-
-    .container {
-      max-width: 1100px;
-      margin: 0 auto;
-    }
-
-    .section-label {
-      display: inline-block;
-      font-size: 0.75rem;
-      letter-spacing: 0.15em;
-      text-transform: uppercase;
-      font-weight: 700;
-      color: var(--green-mid);
-      margin-bottom: 0.6rem;
-    }
-
-    .section-title {
-      font-size: clamp(1.8rem, 4vw, 2.6rem);
-      font-weight: 800;
-      color: var(--green-dark);
-      margin-bottom: 1rem;
-      line-height: 1.15;
-    }
-
-    .section-divider {
-      width: 56px;
-      height: 4px;
-      background: var(--green-light);
-      border-radius: 2px;
-      margin-bottom: 2rem;
-    }
-
-    /* ABOUT */
-    #about {
-      background: var(--cream);
-    }
-
-    .about-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 4rem;
-      align-items: center;
-    }
-
-    .about-text p {
-      color: var(--gray);
-      font-size: 1.05rem;
-      margin-bottom: 1.2rem;
-    }
-
-    .about-text p:last-child {
-      margin-bottom: 0;
-    }
-
-    .about-visual {
-      background: var(--green-dark);
-      border-radius: 12px;
-      padding: 2.5rem;
-      color: var(--white);
-      display: flex;
-      flex-direction: column;
-      gap: 1.4rem;
-    }
-
-    .about-stat {
-      display: flex;
-      align-items: center;
-      gap: 1rem;
-    }
-
-    .stat-icon {
-      width: 48px;
-      height: 48px;
-      background: var(--green-light);
-      border-radius: 10px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 1.4rem;
-      flex-shrink: 0;
-    }
-
-    .stat-text strong {
-      display: block;
-      font-size: 1.1rem;
-      font-weight: 700;
-    }
-
-    .stat-text span {
-      font-size: 0.85rem;
-      color: var(--green-pale);
-    }
-
-    /* SERVICES */
-    #services {
-      background: var(--white);
-    }
-
-    .services-header {
-      text-align: center;
-      margin-bottom: 3rem;
-    }
-
-    .services-header .section-divider {
-      margin: 0 auto 2rem;
-    }
-
-    .services-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 1.5rem;
-    }
-
-    .service-card {
-      background: var(--cream);
-      border-radius: 10px;
-      padding: 2rem 1.6rem;
-      border-top: 4px solid var(--green-light);
-      transition: transform 0.2s, box-shadow 0.2s;
-    }
-
-    .service-card:hover {
-      transform: translateY(-4px);
-      box-shadow: 0 8px 24px rgba(45,80,22,0.12);
-    }
-
-    .service-icon {
-      width: 54px;
-      height: 54px;
-      background: var(--green-dark);
-      border-radius: 12px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 1.5rem;
-      margin-bottom: 1.1rem;
-    }
-
-    .service-card h3 {
-      font-size: 1.1rem;
-      font-weight: 700;
-      color: var(--green-dark);
-      margin-bottom: 0.5rem;
-    }
-
-    .service-card p {
-      font-size: 0.92rem;
-      color: var(--gray);
-      line-height: 1.55;
-    }
-
-    /* CONTACT */
-    #contact {
-      background: var(--green-dark);
-      color: var(--white);
-    }
-
-    #contact .section-label {
-      color: var(--green-pale);
-    }
-
-    #contact .section-title {
-      color: var(--white);
-    }
-
-    #contact .section-divider {
-      background: var(--green-light);
-    }
-
-    .contact-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 4rem;
-      align-items: start;
-    }
-
-    .contact-info {
-      display: flex;
-      flex-direction: column;
-      gap: 1.6rem;
-    }
-
-    .contact-item {
-      display: flex;
-      align-items: flex-start;
-      gap: 1rem;
-    }
-
-    .contact-item-icon {
-      width: 44px;
-      height: 44px;
-      background: var(--green-light);
-      border-radius: 8px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 1.2rem;
-      flex-shrink: 0;
-    }
-
-    .contact-item-text strong {
-      display: block;
-      font-size: 0.78rem;
-      letter-spacing: 0.1em;
-      text-transform: uppercase;
-      color: var(--green-pale);
-      margin-bottom: 0.2rem;
-      font-weight: 600;
-    }
-
-    .contact-item-text span,
-    .contact-item-text a {
-      font-size: 1.05rem;
-      color: var(--white);
-      text-decoration: none;
-    }
-
-    .contact-item-text a:hover {
-      color: var(--green-pale);
-    }
-
-    /* Rating display */
-    .rating-block {
-      background: rgba(255,255,255,0.08);
-      border: 1px solid rgba(255,255,255,0.15);
-      border-radius: 10px;
-      padding: 1.4rem 1.6rem;
-      display: flex;
-      align-items: center;
-      gap: 1.2rem;
-    }
-
-    .rating-stars {
-      display: flex;
-      gap: 3px;
-    }
-
-    .star {
-      color: #f5c518;
-      font-size: 1.3rem;
-    }
-
-    .rating-info strong {
-      display: block;
-      font-size: 1.7rem;
-      font-weight: 800;
-      color: var(--white);
-      line-height: 1;
-    }
-
-    .rating-info span {
-      font-size: 0.8rem;
-      color: var(--green-pale);
-    }
-
-    /* CTA panel */
-    .contact-cta-panel {
-      background: rgba(255,255,255,0.06);
-      border: 1px solid rgba(255,255,255,0.12);
-      border-radius: 12px;
-      padding: 2rem;
-      display: flex;
-      flex-direction: column;
-      gap: 1rem;
-    }
-
-    .contact-cta-panel p {
-      color: rgba(255,255,255,0.75);
-      font-size: 0.98rem;
-      line-height: 1.6;
-      margin-bottom: 0.5rem;
-    }
-
-    .btn-directions {
-      display: inline-flex;
-      align-items: center;
-      gap: 0.5rem;
-      background: var(--green-light);
-      color: var(--white);
-      padding: 0.9rem 1.8rem;
-      border-radius: 6px;
-      text-decoration: none;
-      font-weight: 700;
-      font-size: 1rem;
-      transition: all 0.2s;
-      text-align: center;
-      justify-content: center;
-    }
-
-    .btn-directions:hover {
-      background: var(--earth-light);
-      transform: translateY(-2px);
-    }
-
-    .btn-call {
-      display: inline-flex;
-      align-items: center;
-      gap: 0.5rem;
-      background: transparent;
-      color: var(--white);
-      padding: 0.9rem 1.8rem;
-      border-radius: 6px;
-      text-decoration: none;
-      font-weight: 600;
-      font-size: 1rem;
-      border: 2px solid rgba(255,255,255,0.4);
-      transition: all 0.2s;
-      text-align: center;
-      justify-content: center;
-    }
-
-    .btn-call:hover {
-      background: rgba(255,255,255,0.1);
-      border-color: rgba(255,255,255,0.8);
-    }
-
-    /* FOOTER */
-    footer {
-      background: #1a3009;
-      color: rgba(255,255,255,0.55);
-      text-align: center;
-      padding: 2rem;
-      font-size: 0.88rem;
-    }
-
-    footer strong {
-      color: var(--green-pale);
-    }
-
-    /* RESPONSIVE */
-    @media (max-width: 900px) {
-      .about-grid,
-      .contact-grid {
-        grid-template-columns: 1fr;
-        gap: 2.5rem;
-      }
-
-      .services-grid {
-        grid-template-columns: repeat(2, 1fr);
-      }
-    }
-
-    @media (max-width: 640px) {
-      .nav-links {
-        display: none;
-        position: fixed;
-        top: 64px;
-        left: 0;
-        width: 100%;
-        background: var(--green-dark);
-        flex-direction: column;
-        gap: 0;
-        padding: 0;
-        box-shadow: 0 6px 16px rgba(0,0,0,0.3);
-      }
-
-      .nav-links.open {
-        display: flex;
-      }
-
-      .nav-links li a {
-        display: block;
-        padding: 1rem 2rem;
-        border-bottom: 1px solid rgba(255,255,255,0.08);
-        border-radius: 0;
-      }
-
-      .nav-cta {
-        border-radius: 0 !important;
-        background: var(--green-mid) !important;
-      }
-
-      .hamburger {
-        display: flex;
-      }
-
-      .services-grid {
-        grid-template-columns: 1fr;
-      }
-
-      .hero-buttons {
-        flex-direction: column;
-        align-items: center;
-      }
-
-      .btn-primary,
-      .btn-outline {
-        width: 100%;
-        max-width: 280px;
-        text-align: center;
-      }
-    }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Hammer Down Lawn Care | Gainesville, FL</title>
+<style>
+  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+  :root{
+    --ink:#0a1708; --moss:#13311a; --leaf:#1d6b2a; --grass:#3aa83f;
+    --lime:#86df42; --neon:#c8ff52; --pale:#edffd8; --cream:#f6ffe9;
+    --font:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    --mono:ui-monospace,"Cascadia Mono","Segoe UI Mono",Menlo,Consolas,monospace;
+  }
+  html{scroll-behavior:smooth}
+  body{font-family:var(--font);background:var(--ink);color:var(--pale);line-height:1.6;overflow-x:hidden}
+  a{color:inherit;text-decoration:none}
+  ::selection{background:var(--neon);color:var(--ink)}
+
+  /* NAV */
+  nav{position:fixed;top:0;left:0;right:0;z-index:60;display:flex;align-items:center;justify-content:space-between;
+    padding:.85rem 1.5rem;background:rgba(10,23,8,.6);backdrop-filter:blur(10px);border-bottom:1px solid rgba(200,255,82,.14)}
+  .brand{display:flex;align-items:center;gap:.6rem;font-weight:900;letter-spacing:.02em;text-transform:uppercase}
+  .brand .mk{width:36px;height:36px;border-radius:8px;background:linear-gradient(135deg,var(--grass),var(--neon));display:grid;place-items:center;flex-shrink:0}
+  .brand small{display:block;font-size:.6rem;letter-spacing:.26em;color:var(--lime);font-weight:600}
+  .navlinks{display:flex;gap:1.4rem;font-size:.85rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em}
+  .navlinks a{opacity:.82;transition:opacity .2s}.navlinks a:hover{opacity:1;color:var(--neon)}
+
+  /* MARQUEE BANDS — structural spine */
+  .marquee{overflow:hidden;white-space:nowrap;display:flex;border-block:2px solid rgba(200,255,82,.25)}
+  .marquee .track{display:inline-flex;align-items:center;gap:2.5rem;padding:.55rem 0;will-change:transform;animation:slideL var(--dur,26s) linear infinite}
+  .marquee.rev .track{animation-name:slideR}
+  .marquee .track span{font-size:clamp(1.4rem,4vw,2.6rem);font-weight:900;text-transform:uppercase;letter-spacing:.02em;display:inline-flex;align-items:center;gap:2.5rem}
+  .marquee .track span::after{content:"●";color:var(--neon);font-size:.7em}
+  @keyframes slideL{to{transform:translateX(-50%)}}
+  @keyframes slideR{from{transform:translateX(-50%)}to{transform:translateX(0)}}
+  .m-fill{background:var(--neon);color:var(--ink)}
+  .m-outline{color:transparent;-webkit-text-stroke:1.5px var(--lime);text-stroke:1.5px var(--lime)}
+  .m-dark{background:var(--moss);color:var(--pale)}
+
+  /* HERO */
+  .hero{min-height:88vh;display:grid;place-items:center;text-align:center;padding:7rem 1.5rem 3rem;position:relative;overflow:hidden}
+  .hero::before{content:"";position:absolute;inset:0;background:
+     radial-gradient(60% 50% at 50% 0%,rgba(58,168,63,.28),transparent 70%),
+     repeating-linear-gradient(90deg,transparent 0 38px,rgba(200,255,82,.04) 38px 39px)}
+  .hero-in{position:relative;z-index:2;max-width:980px}
+  .pill{display:inline-flex;align-items:center;gap:.5rem;font-size:.78rem;letter-spacing:.18em;text-transform:uppercase;
+    color:var(--neon);border:1px solid rgba(200,255,82,.4);border-radius:999px;padding:.5rem 1.1rem;margin-bottom:1.5rem;font-weight:700}
+  h1{font-size:clamp(2.8rem,11vw,7rem);line-height:.9;font-weight:900;letter-spacing:-.03em;text-transform:uppercase}
+  h1 .hit{display:inline-block;background:linear-gradient(180deg,var(--neon),var(--grass));-webkit-background-clip:text;background-clip:text;color:transparent}
+  .hero p{margin:1.4rem auto 2rem;max-width:560px;font-size:clamp(1rem,2.4vw,1.2rem);color:#d4ecbd}
+  .btns{display:flex;gap:1rem;justify-content:center;flex-wrap:wrap}
+  .btn{display:inline-flex;align-items:center;gap:.5rem;font-weight:800;padding:1rem 1.8rem;border-radius:10px;
+    font-size:.95rem;text-transform:uppercase;letter-spacing:.04em;border:none;cursor:pointer;transition:transform .2s,box-shadow .2s}
+  .btn-p{background:var(--neon);color:var(--ink);box-shadow:0 10px 30px rgba(200,255,82,.3)}
+  .btn-g{background:transparent;color:var(--pale);border:1px solid rgba(255,255,255,.25)}
+  .btn:hover{transform:translateY(-3px)}
+  .badges{display:flex;gap:1.6rem;justify-content:center;flex-wrap:wrap;margin-top:2.6rem;font-size:.85rem;color:#b9d6a0}
+  .badges b{color:var(--neon)}
+
+  section{padding:clamp(3.5rem,8vw,6rem) 1.5rem}
+  .wrap{max-width:1100px;margin:0 auto}
+  .kick{font-family:var(--mono);font-size:.78rem;letter-spacing:.28em;text-transform:uppercase;color:var(--lime);margin-bottom:.7rem}
+  h2{font-size:clamp(1.9rem,5vw,3rem);font-weight:900;line-height:1;text-transform:uppercase;letter-spacing:-.02em;color:#f0ffdd}
+
+  /* ABOUT */
+  .about{background:linear-gradient(180deg,var(--ink),var(--moss))}
+  .about-grid{display:grid;grid-template-columns:1.2fr .8fr;gap:3rem;margin-top:2rem;align-items:start}
+  .about p{color:#cde6b6;margin-bottom:1rem;max-width:60ch}
+  .feat{display:grid;gap:.9rem}
+  .feat .f{display:flex;gap:.9rem;align-items:flex-start;background:rgba(255,255,255,.04);border:1px solid rgba(200,255,82,.16);border-radius:12px;padding:1rem}
+  .feat .f svg{width:28px;height:28px;flex-shrink:0}
+  .feat .f b{display:block;color:#eaffce}
+  .feat .f span{font-size:.88rem;color:#aecb95}
+
+  /* SERVICES */
+  .services{background:var(--moss)}
+  .svc-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(270px,1fr));gap:1.1rem;margin-top:2.2rem}
+  .svc{position:relative;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.1);border-radius:14px;
+    padding:1.6rem;overflow:hidden;opacity:0;transform:translateY(28px);transition:opacity .6s,transform .6s,border-color .25s}
+  .svc.in{opacity:1;transform:none}
+  .svc:hover{border-color:var(--neon)}
+  .svc .tag{font-family:var(--mono);font-size:.72rem;color:var(--lime);letter-spacing:.1em}
+  .svc h3{font-size:1.16rem;margin:.5rem 0 .5rem;color:#f0ffdd;display:flex;align-items:center;gap:.5rem}
+  .svc h3 svg{width:24px;height:24px}
+  .svc p{font-size:.93rem;color:#bdd6a6}
+
+  /* CONTACT */
+  .contact{background:linear-gradient(180deg,var(--moss),var(--ink))}
+  .c-grid{display:grid;grid-template-columns:1fr 1fr;gap:2rem;margin-top:2.2rem}
+  .card{background:rgba(255,255,255,.04);border:1px solid rgba(200,255,82,.18);border-radius:18px;padding:1.8rem}
+  .row{display:flex;gap:.9rem;align-items:flex-start;padding:.9rem 0;border-bottom:1px solid rgba(255,255,255,.08)}
+  .row:last-child{border-bottom:none}
+  .row svg{width:24px;height:24px;flex-shrink:0;margin-top:2px}
+  .row .lbl{font-size:.7rem;letter-spacing:.16em;text-transform:uppercase;color:var(--lime)}
+  .row .val{font-size:1.04rem;font-weight:700;color:#f0ffdd}
+  .rate{display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;
+    background:linear-gradient(150deg,rgba(58,168,63,.25),rgba(10,23,8,.4));border:1px solid rgba(200,255,82,.25);border-radius:18px;padding:2rem}
+  .rate .big{font-size:4rem;font-weight:900;color:var(--neon);line-height:1}
+  .rate .stars{font-size:1.5rem;color:var(--neon);letter-spacing:.12em;margin:.4rem 0}
+  .rate .meta{color:#cde6b6;font-size:.92rem}
+  .c-cta{display:flex;gap:1rem;flex-wrap:wrap;justify-content:center;margin-top:1.8rem}
+
+  footer{background:var(--ink);text-align:center;padding:2.6rem 1.5rem;border-top:1px solid rgba(200,255,82,.14);color:#9cc081;font-size:.9rem}
+  footer b{color:#f0ffdd;display:block;font-size:1.05rem;margin-bottom:.4rem;text-transform:uppercase;letter-spacing:.04em}
+
+  @media(max-width:760px){.navlinks{display:none}.about-grid,.c-grid{grid-template-columns:1fr}}
+  @media(prefers-reduced-motion:reduce){
+    *{animation:none!important;transition:none!important}
+    html{scroll-behavior:auto}
+    .marquee .track{transform:none!important}
+    .svc{opacity:1;transform:none}
+  }
+</style>
 </head>
 <body>
+<nav>
+  <a class="brand" href="#top">
+    <span class="mk"><svg width="20" height="20" viewBox="0 0 24 24" fill="#0a1708"><path d="M14 3l-2 2 2 2-3 3-2-2-2 2 7 7 2-2-2-2 3-3 2 2 2-2-7-7zM4 16l-2 2 4 4 2-2-4-4z"/></svg></span>
+    <span>Hammer Down<small>Lawn Care · Gainesville, FL</small></span>
+  </a>
+  <div class="navlinks"><a href="#about">About</a><a href="#services">Services</a><a href="#contact">Contact</a></div>
+</nav>
 
-  <!-- NAV -->
-  <nav>
-    <a class="nav-logo" href="#">
-      <div class="nav-logo-icon">&#127807;</div>
-      <div class="nav-logo-text">
-        Hammer Down Lawn Care
-        <span>Gainesville, FL</span>
+<div class="marquee" style="--dur:30s;margin-top:0;padding-top:3.6rem;border-top:none">
+  <div class="track"><span class="m-fill">Hammer Down Lawn Care</span><span class="m-outline">Gainesville, FL</span><span class="m-fill">Nailed Down</span><span class="m-outline">Get It Done Right</span><span class="m-fill">Hammer Down Lawn Care</span><span class="m-outline">Gainesville, FL</span><span class="m-fill">Nailed Down</span><span class="m-outline">Get It Done Right</span></div>
+</div>
+
+<header class="hero" id="top">
+  <div class="hero-in">
+    <span class="pill">★ Rated 5.0 on Google Maps</span>
+    <h1>Your Lawn,<br><span class="hit">Nailed Down.</span></h1>
+    <p>Professional lawn care you can count on — reliable, thorough, and built for the Florida climate. Hammer Down gets it done right.</p>
+    <div class="btns">
+      <a class="btn btn-p" href="tel:+19546636156">Get in Touch</a>
+      <a class="btn btn-g" href="#services">Our Services</a>
+    </div>
+    <div class="badges">
+      <div>★ <b>5.0</b> Google Rating</div>
+      <div>📍 <b>Gainesville</b>, FL</div>
+      <div>🌿 <b>Full-Service</b> Lawn Care</div>
+    </div>
+  </div>
+</header>
+
+<div class="marquee rev m-dark" style="--dur:34s"><div class="track"><span>Mowing</span><span>Edging</span><span>Trimming</span><span>Cleanup</span><span>Fertilization</span><span>Seasonal Prep</span><span>Mowing</span><span>Edging</span><span>Trimming</span><span>Cleanup</span><span>Fertilization</span><span>Seasonal Prep</span></div></div>
+
+<section class="about" id="about">
+  <div class="wrap">
+    <div class="kick">// About Us</div>
+    <h2>Dependable Lawn Care in Gainesville</h2>
+    <div class="about-grid">
+      <div>
+        <p>Hammer Down Lawn Care is a locally operated lawn and landscape maintenance service proudly serving the Gainesville, FL area. We understand the demands of North Florida's heat, humidity, and growing season, and we tailor our approach to keep lawns healthy and looking sharp all year long.</p>
+        <p>Whether you need regular weekly maintenance or a one-time cleanup, our team shows up on time and puts in the work — no shortcuts. We take pride in the results we deliver for every yard we touch.</p>
+        <p>Ready to stop stressing about your lawn? Contact us for details on scheduling and availability.</p>
       </div>
-    </a>
-    <ul class="nav-links" id="navLinks">
-      <li><a href="#about">About</a></li>
-      <li><a href="#services">Services</a></li>
-      <li><a href="#contact" class="nav-cta">Contact Us</a></li>
-    </ul>
-    <button class="hamburger" id="hamburger" aria-label="Toggle menu">
-      <span></span>
-      <span></span>
-      <span></span>
-    </button>
-  </nav>
-
-  <!-- HERO -->
-  <section class="hero" id="home">
-    <div class="hero-content">
-      <div class="hero-badge">&#9733; Rated 5.0 on Google Maps</div>
-      <h1>Your Lawn, <em>Nailed Down.</em></h1>
-      <p>Professional lawn care you can count on — reliable, thorough, and built for the Florida climate. Hammer Down gets it done right.</p>
-      <div class="hero-buttons">
-        <a href="#contact" class="btn-primary">Get in Touch</a>
-        <a href="#services" class="btn-outline">Our Services</a>
+      <div class="feat">
+        <div class="f"><svg viewBox="0 0 24 24" fill="none" stroke="#c8ff52" stroke-width="2" stroke-linecap="round"><path d="M12 3C8 8 6 11 6 14a6 6 0 0012 0c0-3-2-6-6-11z"/></svg><div><b>Full-Service Lawn Care</b><span>Mowing, edging, cleanup &amp; more</span></div></div>
+        <div class="f"><svg viewBox="0 0 24 24" fill="#c8ff52"><path d="M12 2l2.4 6.6H21l-5.3 4 2 6.6L12 15.8 6.3 19.2l2-6.6L3 8.6h6.6z"/></svg><div><b>5.0 Google Rating</b><span>Trusted by Gainesville homeowners</span></div></div>
+        <div class="f"><svg viewBox="0 0 24 24" fill="none" stroke="#c8ff52" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c3 3 3 15 0 18M12 3c-3 3-3 15 0 18" stroke-linecap="round"/></svg><div><b>Florida-Climate Expertise</b><span>Lawn care built for the Sunshine State</span></div></div>
+        <div class="f"><svg viewBox="0 0 24 24" fill="none" stroke="#c8ff52" stroke-width="2" stroke-linecap="round"><path d="M5 4h4l2 5-2 1c1 3 3 5 6 6l1-2 5 2v4c0 1-1 2-2 2C12 22 2 12 2 6c0-1 1-2 2-2z"/></svg><div><b>Easy to Reach</b><span>Call or contact us anytime</span></div></div>
       </div>
     </div>
-  </section>
+  </div>
+</section>
 
-  <!-- ABOUT -->
-  <section id="about">
-    <div class="container">
-      <div class="about-grid">
-        <div class="about-text">
-          <div class="section-label">About Us</div>
-          <h2 class="section-title">Dependable Lawn Care in Gainesville</h2>
-          <div class="section-divider"></div>
-          <p>Hammer Down Lawn Care is a locally operated lawn and landscape maintenance service proudly serving the Gainesville, FL area. We understand the demands of North Florida's heat, humidity, and growing season, and we tailor our approach to keep lawns healthy and looking sharp all year long.</p>
-          <p>Whether you need regular weekly maintenance or a one-time cleanup, our team shows up on time and puts in the work — no shortcuts. We take pride in the results we deliver for every yard we touch.</p>
-          <p>Ready to stop stressing about your lawn? Contact us for details on scheduling and availability.</p>
-        </div>
-        <div class="about-visual">
-          <div class="about-stat">
-            <div class="stat-icon">&#127807;</div>
-            <div class="stat-text">
-              <strong>Full-Service Lawn Care</strong>
-              <span>Mowing, edging, cleanup &amp; more</span>
-            </div>
-          </div>
-          <div class="about-stat">
-            <div class="stat-icon">&#9733;</div>
-            <div class="stat-text">
-              <strong>5.0 Google Rating</strong>
-              <span>Trusted by Gainesville homeowners</span>
-            </div>
-          </div>
-          <div class="about-stat">
-            <div class="stat-icon">&#127757;</div>
-            <div class="stat-text">
-              <strong>Florida-Climate Expertise</strong>
-              <span>Lawn care built for the Sunshine State</span>
-            </div>
-          </div>
-          <div class="about-stat">
-            <div class="stat-icon">&#128222;</div>
-            <div class="stat-text">
-              <strong>Easy to Reach</strong>
-              <span>Call or contact us anytime</span>
-            </div>
-          </div>
-        </div>
-      </div>
+<section class="services" id="services">
+  <div class="wrap">
+    <div class="kick">// What We Do</div>
+    <h2>Our Lawn Care Services</h2>
+    <div class="svc-grid" id="svcGrid">
+      <article class="svc"><div class="tag">SVC.01</div><h3><svg viewBox="0 0 24 24" fill="none" stroke="#c8ff52" stroke-width="2" stroke-linecap="round"><path d="M3 18h18M5 18c0-4 3-7 7-7s7 3 7 7M12 11V4"/></svg>Lawn Mowing &amp; Maintenance</h3><p>Regular mowing on a schedule that keeps your turf at the ideal height. Contact us for details on frequency and pricing.</p></article>
+      <article class="svc"><div class="tag">SVC.02</div><h3><svg viewBox="0 0 24 24" fill="none" stroke="#c8ff52" stroke-width="2" stroke-linecap="round"><path d="M4 20l8-8M14 6l4-2 2 2-2 4M9 9L7 7l-2 2 2 2"/></svg>Edging &amp; Trimming</h3><p>Clean, crisp edges along driveways, sidewalks, and garden beds that give your property a polished, well-kept appearance.</p></article>
+      <article class="svc"><div class="tag">SVC.03</div><h3><svg viewBox="0 0 24 24" fill="none" stroke="#c8ff52" stroke-width="2" stroke-linecap="round"><path d="M12 21v-7M12 14c-4 0-7-3-7-7 4 0 7 3 7 7zM12 14c4 0 7-3 7-7-4 0-7 3-7 7z"/></svg>Shrub &amp; Hedge Trimming</h3><p>Shaping and trimming of ornamental shrubs and hedges to maintain a tidy look and healthy growth throughout the season.</p></article>
+      <article class="svc"><div class="tag">SVC.04</div><h3><svg viewBox="0 0 24 24" fill="none" stroke="#c8ff52" stroke-width="2" stroke-linecap="round"><path d="M4 16c4-8 12-8 16 0M8 20h8M12 16V8"/></svg>Yard Cleanup &amp; Debris Removal</h3><p>Clearing of leaves, clippings, branches, and seasonal debris so your property stays clean and hazard-free.</p></article>
+      <article class="svc"><div class="tag">SVC.05</div><h3><svg viewBox="0 0 24 24" fill="none" stroke="#c8ff52" stroke-width="2" stroke-linecap="round"><path d="M12 3c5 5 8 9 8 13a8 8 0 01-16 0c0-4 3-8 8-13z"/></svg>Fertilization &amp; Lawn Health</h3><p>Targeted fertilization treatments to promote thick, green turf suited to Florida soil and climate conditions. Contact us for details.</p></article>
+      <article class="svc"><div class="tag">SVC.06</div><h3><svg viewBox="0 0 24 24" fill="none" stroke="#c8ff52" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M5 5l2 2M17 17l2 2M19 5l-2 2M7 17l-2 2"/></svg>Seasonal &amp; One-Time Services</h3><p>One-time cleanups, seasonal prep, and special projects — flexible service options to fit your schedule and needs.</p></article>
     </div>
-  </section>
+  </div>
+</section>
 
-  <!-- SERVICES -->
-  <section id="services">
-    <div class="container">
-      <div class="services-header">
-        <div class="section-label">What We Do</div>
-        <h2 class="section-title">Our Lawn Care Services</h2>
-        <div class="section-divider"></div>
+<div class="marquee" style="--dur:28s"><div class="track"><span class="m-fill">Get In Touch</span><span class="m-outline">(954) 663-6156</span><span class="m-fill">3431 NW 67th Ave</span><span class="m-outline">Gainesville, FL</span><span class="m-fill">Get In Touch</span><span class="m-outline">(954) 663-6156</span><span class="m-fill">3431 NW 67th Ave</span><span class="m-outline">Gainesville, FL</span></div></div>
+
+<section class="contact" id="contact">
+  <div class="wrap">
+    <div class="kick">// Get in Touch</div>
+    <h2>Contact Hammer Down</h2>
+    <div class="c-grid">
+      <div class="card">
+        <div class="row"><svg viewBox="0 0 24 24" fill="none" stroke="#c8ff52" stroke-width="2"><path d="M12 21s7-6 7-12a7 7 0 10-14 0c0 6 7 12 7 12z"/><circle cx="12" cy="9" r="2.5"/></svg><div><div class="lbl">Address</div><div class="val">3431 NW 67th Ave, Gainesville, FL</div></div></div>
+        <div class="row"><svg viewBox="0 0 24 24" fill="none" stroke="#c8ff52" stroke-width="2" stroke-linecap="round"><path d="M5 4h4l2 5-2 1c1 3 3 5 6 6l1-2 5 2v4c0 1-1 2-2 2C12 22 2 12 2 6c0-1 1-2 2-2z"/></svg><div><div class="lbl">Phone</div><div class="val"><a href="tel:+19546636156">(954) 663-6156</a></div></div></div>
+        <div class="row"><svg viewBox="0 0 24 24" fill="none" stroke="#c8ff52" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg><div><div class="lbl">Hours</div><div class="val">Contact us for details</div></div></div>
       </div>
-      <div class="services-grid">
-        <div class="service-card">
-          <div class="service-icon">&#9986;</div>
-          <h3>Lawn Mowing &amp; Maintenance</h3>
-          <p>Regular mowing on a schedule that keeps your turf at the ideal height. Contact us for details on frequency and pricing.</p>
-        </div>
-        <div class="service-card">
-          <div class="service-icon">&#127795;</div>
-          <h3>Edging &amp; Trimming</h3>
-          <p>Clean, crisp edges along driveways, sidewalks, and garden beds that give your property a polished, well-kept appearance.</p>
-        </div>
-        <div class="service-card">
-          <div class="service-icon">&#127810;</div>
-          <h3>Shrub &amp; Hedge Trimming</h3>
-          <p>Shaping and trimming of ornamental shrubs and hedges to maintain a tidy look and healthy growth throughout the season.</p>
-        </div>
-        <div class="service-card">
-          <div class="service-icon">&#127811;</div>
-          <h3>Yard Cleanup &amp; Debris Removal</h3>
-          <p>Clearing of leaves, clippings, branches, and seasonal debris so your property stays clean and hazard-free.</p>
-        </div>
-        <div class="service-card">
-          <div class="service-icon">&#128167;</div>
-          <h3>Fertilization &amp; Lawn Health</h3>
-          <p>Targeted fertilization treatments to promote thick, green turf suited to Florida soil and climate conditions. Contact us for details.</p>
-        </div>
-        <div class="service-card">
-          <div class="service-icon">&#127756;</div>
-          <h3>Seasonal &amp; One-Time Services</h3>
-          <p>One-time cleanups, seasonal prep, and special projects — flexible service options to fit your schedule and needs.</p>
+      <div class="rate">
+        <div class="stars">★★★★★</div>
+        <div class="big">5.0</div>
+        <div class="meta">Rating on Google Maps</div>
+        <div class="c-cta">
+          <a class="btn btn-p" href="https://www.google.com/maps/search/Hammer%20Down%20Lawn%20Care%203431%20NW%2067th%20Ave" target="_blank" rel="noopener">Get Directions</a>
         </div>
       </div>
     </div>
-  </section>
-
-  <!-- CONTACT -->
-  <section id="contact">
-    <div class="container">
-      <div class="contact-grid">
-        <div>
-          <div class="section-label">Get in Touch</div>
-          <h2 class="section-title">Contact Hammer Down</h2>
-          <div class="section-divider"></div>
-          <div class="contact-info">
-            <div class="contact-item">
-              <div class="contact-item-icon">&#128205;</div>
-              <div class="contact-item-text">
-                <strong>Address</strong>
-                <span>3431 NW 67th Ave, Gainesville, FL</span>
-              </div>
-            </div>
-            <div class="contact-item">
-              <div class="contact-item-icon">&#128222;</div>
-              <div class="contact-item-text">
-                <strong>Phone</strong>
-                <a href="tel:+19546636156">(954) 663-6156</a>
-              </div>
-            </div>
-            <div class="contact-item">
-              <div class="contact-item-icon">&#128337;</div>
-              <div class="contact-item-text">
-                <strong>Hours</strong>
-                <span>Contact us for details</span>
-              </div>
-            </div>
-            <div class="rating-block">
-              <div class="rating-stars">
-                <span class="star">&#9733;</span>
-                <span class="star">&#9733;</span>
-                <span class="star">&#9733;</span>
-                <span class="star">&#9733;</span>
-                <span class="star">&#9733;</span>
-              </div>
-              <div class="rating-info">
-                <strong>5.0</strong>
-                <span>Rating on Google Maps</span>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="contact-cta-panel">
-          <h3 style="color: var(--white); font-size: 1.3rem; font-weight: 700; margin-bottom: 0.5rem;">Ready to Schedule?</h3>
-          <p>Give us a call or get directions to our location. We're here to help keep your Gainesville lawn looking its best — all year round.</p>
-          <a href="https://www.google.com/maps/search/Hammer%20Down%20Lawn%20Care%203431%20NW%2067th%20Ave" target="_blank" rel="noopener noreferrer" class="btn-directions">
-            &#128205; Get Directions
-          </a>
-          <a href="tel:+19546636156" class="btn-call">
-            &#128222; Call (954) 663-6156
-          </a>
-        </div>
-      </div>
+    <div class="c-cta">
+      <a class="btn btn-p" href="tel:+19546636156">📞 Call (954) 663-6156</a>
+      <a class="btn btn-g" href="https://www.google.com/maps/search/Hammer%20Down%20Lawn%20Care%203431%20NW%2067th%20Ave" target="_blank" rel="noopener">📍 Get Directions</a>
     </div>
-  </section>
+    <p style="text-align:center;color:#aecb95;margin-top:1.4rem;max-width:50ch;margin-inline:auto">Ready to Schedule? Give us a call or get directions to our location. We're here to help keep your Gainesville lawn looking its best — all year round.</p>
+  </div>
+</section>
 
-  <!-- FOOTER -->
-  <footer>
-    <p>&copy; 2026 <strong>Hammer Down Lawn Care</strong> &mdash; Gainesville, FL &mdash; 3431 NW 67th Ave &mdash; <a href="tel:+19546636156" style="color: var(--green-pale); text-decoration: none;">(954) 663-6156</a></p>
-  </footer>
+<footer>
+  <b>Hammer Down Lawn Care</b>
+  © 2026 Hammer Down Lawn Care — Gainesville, FL — 3431 NW 67th Ave — (954) 663-6156
+</footer>
 
-  <script>
-    // Mobile nav toggle
-    var hamburger = document.getElementById('hamburger');
-    var navLinks = document.getElementById('navLinks');
-    hamburger.addEventListener('click', function() {
-      navLinks.classList.toggle('open');
+<script>
+(function(){
+  var reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  // reveal services
+  var io = new IntersectionObserver(function(es){
+    es.forEach(function(e){ if(e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target);} });
+  },{threshold:.18});
+  document.querySelectorAll('.svc').forEach(function(s,i){ s.style.transitionDelay=(i*60)+'ms'; io.observe(s); });
+
+  // scroll velocity makes the marquees feel kinetic by speeding them up briefly
+  if(!reduce){
+    var tracks = Array.prototype.map.call(document.querySelectorAll('.marquee .track'), function(el){
+      return {el:el, base: parseFloat(getComputedStyle(el).animationDuration) || 30};
     });
-    // Close menu when link clicked
-    navLinks.querySelectorAll('a').forEach(function(link) {
-      link.addEventListener('click', function() {
-        navLinks.classList.remove('open');
+    var last = scrollY, boost = 0;
+    addEventListener('scroll', function(){
+      boost = Math.min(1, boost + Math.abs(scrollY - last) * 0.02);
+      last = scrollY;
+    }, {passive:true});
+    (function tick(){
+      boost *= 0.92;
+      tracks.forEach(function(t){
+        // higher boost -> shorter duration -> faster scroll
+        t.el.style.animationDuration = (t.base / (1 + boost * 2.5)).toFixed(2) + 's';
       });
-    });
-  </script>
-
+      requestAnimationFrame(tick);
+    })();
+  }
+})();
+</script>
 </body>
 </html>
