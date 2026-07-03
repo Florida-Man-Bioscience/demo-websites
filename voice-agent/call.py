@@ -24,7 +24,11 @@ def already_called() -> set[str]:
     if not config.CALL_LOG.exists():
         return set()
     with open(config.CALL_LOG, newline="", encoding="utf-8") as f:
-        return {row["slug"] for row in csv.DictReader(f)}
+        return {
+            row["slug"]
+            for row in csv.DictReader(f)
+            if not row["call_sid"].startswith("TEST-")  # chat.py simulations don't count
+        }
 
 
 def pick_next():
