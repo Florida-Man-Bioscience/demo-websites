@@ -97,6 +97,9 @@ def transcribe(pcm: bytes) -> str:
         WHISPER_URL,
         headers={"Authorization": f"bearer {config.DEEPINFRA_API_KEY}"},
         files={"audio": ("speech.wav", pcm_to_whisper_wav(pcm), "audio/wav")},
+        # Pin the language: auto-detect on short clips can guess wrong and
+        # "transcribe" English speech in another language entirely.
+        data={"language": os.getenv("WHISPER_LANGUAGE", "en")},
         timeout=60,
     )
     resp.raise_for_status()
