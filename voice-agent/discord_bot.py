@@ -32,6 +32,7 @@ import wave
 import discord
 import httpx
 from discord.ext import commands, voice_recv
+from discord.ext.voice_recv import opus as vr_opus
 
 import agent as agent_mod
 import config
@@ -47,9 +48,25 @@ WHISPER_URL = os.getenv(
 )
 DISCORD_BOT_TOKEN = os.getenv("DISCORD_BOT_TOKEN", "")
 
-SILENCE_SECS = 1.0        # pause length that ends your turn
-MIN_SPEECH_SECS = 0.4     # ignore blips shorter than this
+SILENCE_SECS = float(os.getenv("TURN_SILENCE_SECS", "1.2"))  # pause that ends your turn
+MIN_SPEECH_SECS = 0.5     # ignore blips shorter than this
 PCM_RATE, PCM_CHANNELS, PCM_WIDTH = 48000, 2, 2  # what discord hands us
+
+# A single malformed voice packet raises OpusError inside voice_recv's router
+# thread, killing it — after which the bot is permanently deaf ("it just
+# stopped responding"). Drop the bad packet instead of dying.
+_orig_pop_data = vr_opus.PacketDecoder.pop_data
+
+
+def _safe_pop_data(self, **kwargs):
+    try:
+        return _orig_pop_data(self, **kwargs)
+    except Exception as e:
+        log.warning("dropped undecodable voice packet: %s", e)
+        return None
+
+
+vr_opus.PacketDecoder.pop_data = _safe_pop_data
 
 # Never send real SMS from the Discord simulator.
 agent_mod._send_sms = lambda state, to: (
@@ -88,6 +105,11 @@ class Call:
         self.buffers: dict[int, bytearray] = {}
         self.last_packet: dict[int, float] = {}
         self.busy = asyncio.Lock()  # one turn at a time
+        self.mic_open = False  # half-duplex: only capture while the agent listens
+
+    def clear_audio(self):
+        self.buffers.clear()
+        self.last_packet.clear()
 
 
 intents = discord.Intents.default()
@@ -141,6 +163,7 @@ async def speak(vc, call: Call, text: str):
 
 async def run_agent_turn(vc, call: Call, heard: str | None):
     async with call.busy:
+        call.mic_open = False  # stop capturing while we think and talk
         if heard:
             await call.text_channel.send(f"👤 *Heard:* {heard}")
         reply = await asyncio.to_thread(run_turn, call.state, heard)
@@ -149,6 +172,12 @@ async def run_agent_turn(vc, call: Call, heard: str | None):
             await call.text_channel.send("📞 *Agent hung up.*")
             calls.pop(call.text_channel.guild.id, None)
             await vc.disconnect()
+            return
+        # Fresh start for the caller's turn: drop anything captured while the
+        # agent was speaking (echo, backchannel, cross-talk), then open the mic.
+        await asyncio.sleep(0.3)
+        call.clear_audio()
+        call.mic_open = True
 
 
 async def silence_watcher(vc, call: Call):
@@ -163,16 +192,17 @@ async def silence_watcher(vc, call: Call):
             if not buf or now - call.last_packet.get(uid, now) < SILENCE_SECS:
                 continue
             pcm = bytes(buf)
-            buf.clear()
+            call.clear_audio()  # one turn per pause, even with multiple speakers
             if len(pcm) < MIN_SPEECH_SECS * bytes_per_sec:
-                continue
+                break
             try:
                 heard = await asyncio.to_thread(transcribe, pcm)
             except Exception as e:
                 await call.text_channel.send(f"⚠️ transcription failed: {e}")
-                continue
+                break
             if heard:
                 await run_agent_turn(vc, call, heard)
+            break
 
 
 async def start_call(ctx, slug: str, direction: str):
@@ -209,6 +239,10 @@ async def start_call(ctx, slug: str, direction: str):
     def on_voice(user, data: voice_recv.VoiceData):
         if user is None or user.bot:
             return
+        if not call.mic_open:  # half-duplex: deaf while the agent thinks/talks
+            return
+        if user.id not in call.buffers:
+            log.info("hearing %s", user)
         call.buffers.setdefault(user.id, bytearray()).extend(data.pcm)
         call.last_packet[user.id] = time.monotonic()
 
