@@ -67,8 +67,21 @@ docker compose up -d --build
 
 The server listens on `8035` (published to the host). Point Twilio's webhooks
 at your `PUBLIC_BASE_URL` exactly as above — the URL must resolve to this
-container from the public internet (a VPS with a domain + TLS, or a tunnel like
-`cloudflared` / `ngrok` in front of `localhost:8035`).
+container from the public internet.
+
+**Public HTTPS, two ways:**
+
+- **Bundled Caddy proxy (automatic TLS).** If you have a domain, set
+  `AGENT_DOMAIN` in `.env`, point its DNS at the host, open ports 80+443, and
+  bring it up with the `tls` profile. Caddy fetches and renews a Let's Encrypt
+  cert automatically. Set `PUBLIC_BASE_URL=https://$AGENT_DOMAIN`.
+
+  ```bash
+  docker compose --profile tls up -d --build
+  ```
+
+- **Your own tunnel.** Run `cloudflared` / `ngrok` in front of
+  `localhost:8035` and use the tunnel URL as `PUBLIC_BASE_URL` (no Caddy).
 
 The `audio_cache/` and `call-log.csv` live on a named volume
 (`voice-agent-data`, mounted at `/data`), so synthesized audio and call

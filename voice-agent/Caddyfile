@@ -1,0 +1,9 @@
+# Caddy fronts the voice agent with automatic HTTPS (Let's Encrypt).
+#
+# AGENT_DOMAIN must be a real domain whose DNS A/AAAA record points at this
+# host, and ports 80 + 443 must be reachable from the internet — that's how
+# Caddy obtains and renews the certificate. Set PUBLIC_BASE_URL to
+# https://AGENT_DOMAIN so Twilio's webhooks hit this proxy.
+{$AGENT_DOMAIN} {
+	reverse_proxy voice-agent:8035
+}

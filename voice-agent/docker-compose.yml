@@ -20,5 +20,27 @@ services:
       - voice-agent-data:/data
     restart: unless-stopped
 
+  # Optional TLS-terminating reverse proxy. Enable with the `tls` profile:
+  #   docker compose --profile tls up -d --build
+  # Requires AGENT_DOMAIN in .env, DNS pointed at this host, and ports 80+443
+  # open. Without it, put your own tunnel (cloudflared/ngrok) in front of 8035.
+  caddy:
+    image: caddy:2-alpine
+    profiles: ["tls"]
+    ports:
+      - "80:80"
+      - "443:443"
+    environment:
+      AGENT_DOMAIN: ${AGENT_DOMAIN:?set AGENT_DOMAIN in .env to use the tls profile}
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy-data:/data
+      - caddy-config:/config
+    depends_on:
+      - voice-agent
+    restart: unless-stopped
+
 volumes:
   voice-agent-data:
+  caddy-data:
+  caddy-config:
