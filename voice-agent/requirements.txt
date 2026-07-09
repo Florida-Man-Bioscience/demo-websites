@@ -1,4 +1,5 @@
 anthropic>=0.60
+openai>=1.60          # only used when LLM_PROVIDER=grok (xAI OpenAI-compatible API)
 fastapi>=0.110
 uvicorn[standard]>=0.29
 twilio>=9.0

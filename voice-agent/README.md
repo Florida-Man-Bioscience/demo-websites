@@ -13,7 +13,7 @@ with **Claude**, and runs calls over **Twilio**. It knows every business in
               ▼
         server.py (FastAPI)
               │
-     agent.py ── Claude (claude-opus-4-8, effort=low)
+     agent.py ── Claude (claude-opus-4-8, effort=low) or Grok (LLM_PROVIDER=grok)
               │      tools: send_demo_link_sms · log_call_outcome · end_call
               ▼
        tts.py ── Sesame CSM-1B via DeepInfra ── cached WAVs ── <Play> to caller
@@ -41,6 +41,22 @@ cp .env.example .env   # fill in the five keys
 
 You need: an Anthropic API key, a DeepInfra API key, and a Twilio account with
 a voice+SMS phone number (~$1.15/mo; buy a 352 number so callbacks look local).
+
+### Running on Grok instead of Claude
+
+The conversation brain is provider-switchable. To run calls on xAI's Grok, set
+in `.env`:
+
+```bash
+LLM_PROVIDER=grok
+XAI_API_KEY=xai-...        # from console.x.ai
+# GROK_MODEL=grok-4.3      # default; grok-4.5 if latency matters more than cost
+```
+
+Same prompt, same tools, same latency tricks (streamed sentences into TTS).
+Claude remains the default (`LLM_PROVIDER=anthropic`); with Grok selected the
+Anthropic key is unused. Grok tool calls arrive via xAI's OpenAI-compatible
+API (`https://api.x.ai/v1`).
 
 Expose the server and start it:
 
