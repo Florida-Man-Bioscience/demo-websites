@@ -3,24 +3,33 @@
 # and installs the python deps, so the full setup is just:
 #
 #   cd voice-agent
-#   nix-shell
+#   nix-shell                    # or, from anywhere in the repo: nix develop
 #   python discord_bot.py        # or: python chat.py ole-barn --voice
 #                                # or: uvicorn server:app --port 8035
-{ pkgs ? import <nixpkgs> {} }:
+{ pkgs ? import <nixpkgs> { config.allowUnfree = true; } }:  # unfree: ngrok
 
 pkgs.mkShell {
-  packages = with pkgs; [ python3 ffmpeg libopus ];
+  packages = with pkgs; [ python3 ffmpeg libopus ngrok ];
 
   # discord.py can't find_library("opus") on NixOS; discord_bot.py reads this.
   DISCORD_OPUS_LIB = "${pkgs.libopus}/lib/libopus.so.0";
 
   shellHook = ''
-    if [ ! -d .venv ]; then
-      echo "creating .venv and installing python deps (first run only)..."
-      python -m venv .venv
-      .venv/bin/pip install -q -r requirements.txt -r requirements-discord.txt
+    # Anchor on the repo root so `nix develop` from anywhere (and `nix-shell`
+    # from this directory) both land the venv at voice-agent/.venv.
+    dir="$(git rev-parse --show-toplevel 2>/dev/null || echo "$PWD")/voice-agent"
+    [ -d "$dir" ] || dir="$PWD"
+    if [ ! -d "$dir/.venv" ]; then
+      echo "creating voice-agent/.venv and installing python deps (first run only)..."
+      python -m venv "$dir/.venv"
+      "$dir/.venv/bin/pip" install -q -r "$dir/requirements.txt" -r "$dir/requirements-discord.txt"
     fi
-    export PATH="$PWD/.venv/bin:$PATH"
-    echo "voice-agent shell ready (python from .venv, ffmpeg + opus from nix)"
+    export PATH="$dir/.venv/bin:$PATH"
+    if [ ! -f "$dir/.env" ]; then
+      cp "$dir/.env.example" "$dir/.env"
+      echo "created voice-agent/.env from .env.example"
+    fi
+    echo "voice-agent shell ready (python from .venv, ffmpeg + opus + ngrok from nix)"
+    (cd "$dir" && python doctor.py) || true   # go-live checklist against .env
   '';
 }
