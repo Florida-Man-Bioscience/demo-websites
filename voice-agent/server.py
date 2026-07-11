@@ -58,11 +58,14 @@ _LOOP: "asyncio.AbstractEventLoop | None" = None
 # On top of priming, keep ONE spare pre-opened xAI connection at all times:
 # the TLS + websocket handshake to api.x.ai costs ~2s, so a call that claims
 # the spare skips it entirely and only pays greeting generation (~1s), which
-# Twilio's own stream setup fully hides. xAI silently drops idle sessions
-# (keepalive pings go unanswered), so a watcher reopens the spare whenever it
-# dies — and because a dead socket can look open for tens of seconds, claims
-# are verified with a round-trip in _prime_xai before being trusted.
+# Twilio's own stream setup fully hides. xAI emits a ping event every 10s and
+# times sessions out after 15min idle, so a parked spare must be actively
+# read: the watcher drains events (unread pings trip flow control and get the
+# transport killed in ~3min) and reopens the spare when the server closes it.
+# Because a dead socket can still look open for tens of seconds, claims are
+# additionally verified with a round-trip in _prime_xai before being trusted.
 _SPARE_XAI: "asyncio.Task | None" = None
+_SPARE_WATCHER: "asyncio.Task | None" = None
 
 
 async def _open_xai():
@@ -79,28 +82,41 @@ async def _open_xai():
 
 
 def _restock_spare() -> None:
-    global _SPARE_XAI
+    global _SPARE_XAI, _SPARE_WATCHER
     task = asyncio.ensure_future(_open_xai())
     _SPARE_XAI = task
 
     async def watch():
         try:
             ws = await task
-            await ws.wait_closed()
+            while True:
+                await ws.recv()  # drain pings; raises when the server closes
+        except asyncio.CancelledError:
+            return  # claimed: the call owns the socket now, don't touch it
         except Exception:
             pass
         await asyncio.sleep(1)  # backoff so a flapping network can't spin us
         if _SPARE_XAI is task:  # died while still parked -> replace it
             _restock_spare()
 
-    asyncio.ensure_future(watch())
+    _SPARE_WATCHER = asyncio.ensure_future(watch())
 
 
 async def _take_xai():
     """The spare connection if it's alive (fresh connect otherwise), and
     restock for the next call either way."""
-    global _SPARE_XAI
+    global _SPARE_XAI, _SPARE_WATCHER
     spare, _SPARE_XAI = _SPARE_XAI, None
+    watcher, _SPARE_WATCHER = _SPARE_WATCHER, None
+    if watcher is not None:
+        # Stop draining before the call starts reading — and WAIT for the
+        # drain's recv() to unwind, or the claim's first recv() lands while
+        # it's still registered and dies with a concurrency error.
+        watcher.cancel()
+        try:
+            await watcher
+        except asyncio.CancelledError:
+            pass
     _restock_spare()
     if spare is not None:
         try:
