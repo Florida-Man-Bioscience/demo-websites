@@ -38,6 +38,11 @@ from changerequests import (
     get_site_outline as get_site_outline_sync,
     list_open_change_requests as list_open_change_requests_sync,
 )
+from events import (
+    get_event as get_event_sync,
+    list_event_sources as list_event_sources_sync,
+    search_events as search_events_sync,
+)
 from lookup import find_business
 from pitch import get_pitch
 
@@ -432,6 +437,90 @@ async def get_site_outline(slug: str) -> dict:
     Use before capturing change requests so you know current sections/hours/CTAs.
     """
     return await anyio.to_thread.run_sync(_get_site_outline_tool_sync, slug)
+
+
+def _search_events_sync(
+    query: str = "",
+    when: str = "",
+    tags: str = "",
+    free_only: bool = False,
+    limit: int = 10,
+) -> dict:
+    try:
+        tag_list = None
+        if tags:
+            # Accept comma-separated or JSON array string from MCP clients.
+            s = tags.strip()
+            if s.startswith("["):
+                import json as _json
+
+                try:
+                    parsed = _json.loads(s)
+                    tag_list = parsed if isinstance(parsed, list) else [str(parsed)]
+                except _json.JSONDecodeError:
+                    tag_list = [t.strip() for t in s.split(",") if t.strip()]
+            else:
+                tag_list = [t.strip() for t in s.split(",") if t.strip()]
+        return search_events_sync(
+            query=query,
+            when=when,
+            tags=tag_list,
+            free_only=free_only,
+            limit=limit,
+        )
+    except Exception as e:
+        logger.exception("tool %s failed", "search_events")
+        return {"ok": False, "count": 0, "events": [], "error": _unavailable(e)}
+
+
+@mcp.tool()
+async def search_events(
+    query: str = "",
+    when: str = "",
+    tags: str = "",
+    free_only: bool = False,
+    limit: int = 10,
+) -> dict:
+    """Search local Gainesville events (seed store; no live crawl yet).
+
+    when: empty (all upcoming), tonight, tomorrow, or this_weekend
+    (America/New_York). query matches title/description/venue/tags.
+    tags: comma-separated required tags (subset match). free_only filters
+    free events. Expired events (past end/start) are dropped.
+    """
+    return await anyio.to_thread.run_sync(
+        functools.partial(
+            _search_events_sync, query, when, tags, free_only, limit
+        )
+    )
+
+
+def _get_event_tool_sync(event_id: str) -> dict:
+    try:
+        return get_event_sync(event_id)
+    except Exception as e:
+        logger.exception("tool %s failed", "get_event")
+        return {"found": False, "error": _unavailable(e)}
+
+
+@mcp.tool()
+async def get_event(event_id: str) -> dict:
+    """Load one event by id from the local events store."""
+    return await anyio.to_thread.run_sync(_get_event_tool_sync, event_id)
+
+
+def _list_event_sources_tool_sync() -> dict:
+    try:
+        return list_event_sources_sync()
+    except Exception as e:
+        logger.exception("tool %s failed", "list_event_sources")
+        return {"ok": False, "sources": [], "error": _unavailable(e)}
+
+
+@mcp.tool()
+async def list_event_sources() -> dict:
+    """List event sources in the local store with counts (e.g. seed, community)."""
+    return await anyio.to_thread.run_sync(_list_event_sources_tool_sync)
 
 
 def _unavailable(e: Exception) -> str:

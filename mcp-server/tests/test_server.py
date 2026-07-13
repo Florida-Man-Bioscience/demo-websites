@@ -81,6 +81,7 @@ def test_tools_registered(monkeypatch):
         "add_caller_note",
         "create_change_request", "list_open_change_requests",
         "cancel_change_request", "get_site_outline",
+        "search_events", "get_event", "list_event_sources",
     }
 
 
