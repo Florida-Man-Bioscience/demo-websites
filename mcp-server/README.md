@@ -29,6 +29,11 @@ Gainesville demo-websites campaign.
 | `list_open_change_requests(slug?)` | List open ChangeRequests (optional slug filter) |
 | `cancel_change_request(request_id)` | Mark a ChangeRequest cancelled |
 | `get_site_outline(slug)` | Title + headings from `generated-sites/<slug>.html` |
+| `submit_event_broadcast(title, when_start, venue, phone, …)` | Community event post (JSONL; auto-approve + rate limit) |
+| `submit_notice_broadcast(text, category, phone, expires_at?)` | Short notice/gossip (≤280 chars; categories) |
+| `list_recent_broadcasts(category?, limit?)` | Approved non-expired broadcasts, newest first |
+| `report_broadcast(id, reason, reporter_phone?)` | Flag a post for review (pulls from public list) |
+| `delete_own_broadcast(id, phone)` | Soft-delete own post by author phone |
 
 ## Local development
 

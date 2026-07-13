@@ -81,6 +81,8 @@ def test_tools_registered(monkeypatch):
         "add_caller_note",
         "create_change_request", "list_open_change_requests",
         "cancel_change_request", "get_site_outline",
+        "submit_event_broadcast", "submit_notice_broadcast",
+        "list_recent_broadcasts", "report_broadcast", "delete_own_broadcast",
     }
 
 
