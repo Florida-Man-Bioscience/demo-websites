@@ -29,6 +29,9 @@ Gainesville demo-websites campaign.
 | `list_open_change_requests(slug?)` | List open ChangeRequests (optional slug filter) |
 | `cancel_change_request(request_id)` | Mark a ChangeRequest cancelled |
 | `get_site_outline(slug)` | Title + headings from `generated-sites/<slug>.html` |
+| `get_change_request(request_id)` | Load one ChangeRequest by id (any status) |
+| `apply_change_request(request_id)` | Apply structured hours/phone/address/copy items to local HTML; mark shipped (no GitHub PR yet) |
+| `mark_request_shipped(request_id, note?)` | Manually mark a request shipped after external edits |
 | `search_events(query?, when?, tags?, free_only?, limit?)` | Local Gainesville events (seed JSON); when=tonight/tomorrow/this_weekend |
 | `get_event(event_id)` | Full event record by id |
 | `list_event_sources()` | Event source names with counts (seed, community, …) |

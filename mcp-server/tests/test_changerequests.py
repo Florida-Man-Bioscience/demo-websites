@@ -175,3 +175,124 @@ def test_get_site_outline_strips_html_suffix(tiny_site):
     out = cr.get_site_outline("tiny-cafe.html")
     assert out["found"] is True
     assert out["slug"] == "tiny-cafe"
+
+
+def test_apply_change_request_hours_and_phone(tmp_store, tiny_site):
+    # Enrich fixture with a phone line so phone items can match.
+    site = tiny_site / "tiny-cafe.html"
+    html = site.read_text(encoding="utf-8")
+    html = html.replace(
+        "<h1>Welcome to Tiny Cafe</h1>",
+        '<h1>Welcome to Tiny Cafe</h1>\n  <a href="tel:3525550100">(352) 555-0100</a>',
+    )
+    site.write_text(html, encoding="utf-8")
+
+    created = cr.create_change_request(
+        business_slug="tiny-cafe",
+        summary="Update hours and phone",
+        items=[
+            {
+                "type": "hours",
+                "target": "Hours",
+                "before": "Mon–Fri 9–5",
+                "after": "Mon–Sat 8am–8pm",
+            },
+            {
+                "type": "phone",
+                "after": "3525551234",
+            },
+        ],
+    )
+    assert created["created"] is True
+    rid = created["id"]
+
+    result = cr.apply_change_request(rid)
+    assert result["applied"] is True
+    assert result["status"] == "shipped"
+    assert result["changed"] is True
+    assert result["applied_count"] >= 1
+
+    new_html = site.read_text(encoding="utf-8")
+    assert "Mon–Sat 8am–8pm" in new_html
+    assert "Mon–Fri 9–5" not in new_html
+    assert "tel:3525551234" in new_html
+
+    loaded = cr.get_change_request(rid)
+    assert loaded["found"] is True
+    assert loaded["request"]["status"] == "shipped"
+
+    # No longer open
+    open_list = cr.list_open_change_requests("tiny-cafe")
+    assert open_list["count"] == 0
+
+    # Idempotent-ish: already shipped
+    again = cr.apply_change_request(rid)
+    assert again["applied"] is True
+    assert again.get("already_shipped") is True
+
+
+def test_apply_unknown_id_speakable(tmp_store, tiny_site):
+    result = cr.apply_change_request("cr-doesnotexist")
+    assert result["applied"] is False
+    assert "error" in result
+    assert "no change request" in result["error"]
+
+
+def test_apply_missing_file_marks_failed(tmp_store, tiny_site):
+    created = cr.create_change_request(
+        business_slug="no-such-site",
+        summary="ghost",
+        items=[{"type": "hours", "after": "never"}],
+    )
+    rid = created["id"]
+    result = cr.apply_change_request(rid)
+    assert result["applied"] is False
+    assert result["status"] == "failed"
+    assert "no site file" in result["error"]
+    assert cr.get_change_request(rid)["request"]["status"] == "failed"
+
+
+def test_apply_path_traversal_slug_rejected(tmp_store, tiny_site):
+    created = cr.create_change_request(
+        business_slug="../etc/passwd",
+        summary="evil",
+        items=[{"type": "copy", "before": "x", "after": "y"}],
+    )
+    rid = created["id"]
+    result = cr.apply_change_request(rid)
+    assert result["applied"] is False
+    assert result["status"] == "failed"
+    assert "invalid" in result["error"].lower() or "traversal" in result["error"].lower()
+
+
+def test_apply_empty_id(tmp_store):
+    result = cr.apply_change_request("")
+    assert result["applied"] is False
+    assert "id" in result["error"]
+
+
+def test_mark_request_shipped_manual(tmp_store):
+    created = cr.create_change_request("ole-barn", "manual ship", items=[])
+    rid = created["id"]
+    out = cr.mark_request_shipped(rid, note="merged externally")
+    assert out["shipped"] is True
+    assert out["status"] == "shipped"
+    assert cr.get_change_request(rid)["request"]["status"] == "shipped"
+
+
+def test_apply_copy_item(tmp_store, tiny_site):
+    created = cr.create_change_request(
+        "tiny-cafe",
+        "hero copy",
+        items=[
+            {
+                "type": "copy",
+                "before": "Welcome to Tiny Cafe",
+                "after": "Tiny Cafe welcomes you",
+            }
+        ],
+    )
+    result = cr.apply_change_request(created["id"])
+    assert result["applied"] is True
+    html = (tiny_site / "tiny-cafe.html").read_text(encoding="utf-8")
+    assert "Tiny Cafe welcomes you" in html
