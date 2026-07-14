@@ -428,3 +428,283 @@ def get_site_outline(slug: str) -> dict[str, Any]:
         "heading_count": len(parser.headings),
         "path": str(path.name),
     }
+
+
+# --- Apply structured ChangeRequests to generated-sites HTML (#52 slice C) ---
+
+# Statuses that may be claimed and applied.
+_APPLYABLE_STATUSES = frozenset({"pending", "approved", "in_progress"})
+
+
+def get_change_request(request_id: str) -> dict[str, Any]:
+    """Load one ChangeRequest by id. Speakable result; never raises for miss."""
+    rid = (request_id or "").strip()
+    if not rid:
+        return {"found": False, "error": "id is required"}
+    path = _store_path()
+    with _write_lock:
+        records = _read_all(path)
+    for rec in records:
+        if rec.get("id") == rid:
+            return {"found": True, "request": rec, "id": rid}
+    return {"found": False, "id": rid, "error": f"no change request with id {rid!r}"}
+
+
+def _update_request_fields(request_id: str, fields: dict[str, Any]) -> dict[str, Any] | None:
+    """Mutate one request in the JSONL store. Returns updated record or None."""
+    path = _store_path()
+    with _write_lock:
+        records = _read_all(path)
+        found = None
+        for rec in records:
+            if rec.get("id") == request_id:
+                found = rec
+                break
+        if found is None:
+            return None
+        found.update(fields)
+        _write_all(path, records)
+        return dict(found)
+
+
+def _site_path_for_slug(slug: str) -> tuple[Path | None, str | None]:
+    """Resolve generated-sites/<slug>.html with path-traversal checks."""
+    s = (slug or "").strip()
+    if s.endswith(".html"):
+        s = s[: -len(".html")]
+    if not s:
+        return None, "business_slug is required"
+    if not _slug_safe(s):
+        return None, "invalid slug (path traversal refused)"
+    base = _sites_dir().resolve()
+    path = (base / f"{s}.html").resolve()
+    try:
+        path.relative_to(base)
+    except ValueError:
+        return None, "invalid slug (path traversal refused)"
+    return path, None
+
+
+def apply_change_request(request_id: str) -> dict[str, Any]:
+    """Apply structured items (hours/phone/address/copy) to the site HTML.
+
+    Status flow: pending|approved → in_progress → shipped|failed.
+    Writes only under GENERATED_SITES_DIR; does not open GitHub PRs (deferred).
+    Optionally writes a .patch next to the site file for a later PR agent.
+    """
+    # Local import avoids circular import at module load; tests can still monkeypatch.
+    from siteedit import apply_items, summarize_change, unified_diff
+
+    rid = (request_id or "").strip()
+    if not rid:
+        return {"applied": False, "error": "id is required"}
+
+    loaded = get_change_request(rid)
+    if not loaded.get("found"):
+        return {
+            "applied": False,
+            "error": loaded.get("error") or f"no change request with id {rid!r}",
+        }
+    req = loaded["request"]
+    status = str(req.get("status") or "").lower()
+    if status == "shipped":
+        return {
+            "applied": True,
+            "already_shipped": True,
+            "id": rid,
+            "status": "shipped",
+            "business_slug": req.get("business_slug"),
+            "summary": req.get("summary"),
+        }
+    if status not in _APPLYABLE_STATUSES:
+        return {
+            "applied": False,
+            "id": rid,
+            "status": status,
+            "error": (
+                f"request {rid} is {status or 'unknown'} and cannot be applied "
+                f"(need pending, approved, or in_progress)"
+            ),
+        }
+
+    slug = str(req.get("business_slug") or "").strip()
+    site_path, path_err = _site_path_for_slug(slug)
+    if path_err or site_path is None:
+        _update_request_fields(
+            rid,
+            {
+                "status": "failed",
+                "failed_at": _now_iso(),
+                "error": path_err or "invalid slug",
+            },
+        )
+        return {
+            "applied": False,
+            "id": rid,
+            "status": "failed",
+            "business_slug": slug,
+            "error": path_err or "invalid slug",
+        }
+
+    if not site_path.is_file():
+        msg = f"no site file for {slug!r}"
+        _update_request_fields(
+            rid,
+            {"status": "failed", "failed_at": _now_iso(), "error": msg},
+        )
+        return {
+            "applied": False,
+            "id": rid,
+            "status": "failed",
+            "business_slug": slug,
+            "error": msg,
+        }
+
+    items = req.get("items") or []
+    if not isinstance(items, list):
+        items = []
+
+    # Claim work
+    _update_request_fields(
+        rid,
+        {"status": "in_progress", "started_at": _now_iso()},
+    )
+
+    try:
+        before = site_path.read_text(encoding="utf-8", errors="replace")
+    except OSError as e:
+        msg = f"could not read site file ({e.__class__.__name__})"
+        _update_request_fields(
+            rid,
+            {"status": "failed", "failed_at": _now_iso(), "error": msg},
+        )
+        return {
+            "applied": False,
+            "id": rid,
+            "status": "failed",
+            "business_slug": slug,
+            "error": msg,
+        }
+
+    result = apply_items(before, items)
+    if not result.get("ok"):
+        msg = str(result.get("error") or "apply failed")
+        _update_request_fields(
+            rid,
+            {
+                "status": "failed",
+                "failed_at": _now_iso(),
+                "error": msg,
+                "apply_results": result.get("results"),
+            },
+        )
+        return {
+            "applied": False,
+            "id": rid,
+            "status": "failed",
+            "business_slug": slug,
+            "error": msg,
+            "item_results": result.get("results"),
+            "applied_count": result.get("applied", 0),
+            "skipped_count": result.get("skipped", 0),
+        }
+
+    after = result["html"]
+    if after != before:
+        try:
+            site_path.write_text(after, encoding="utf-8")
+        except OSError as e:
+            msg = f"could not write site file ({e.__class__.__name__})"
+            _update_request_fields(
+                rid,
+                {"status": "failed", "failed_at": _now_iso(), "error": msg},
+            )
+            return {
+                "applied": False,
+                "id": rid,
+                "status": "failed",
+                "business_slug": slug,
+                "error": msg,
+            }
+
+        # Optional patch artifact for a later PR agent (not a git commit).
+        try:
+            patch_text = unified_diff(before, after, path=site_path.name)
+            if patch_text:
+                patch_path = site_path.with_suffix(site_path.suffix + f".{rid}.patch")
+                patch_path.write_text(patch_text, encoding="utf-8")
+        except OSError:
+            pass  # patch file is best-effort
+
+    change_summary = summarize_change(before, after)
+    shipped_fields: dict[str, Any] = {
+        "status": "shipped",
+        "shipped_at": _now_iso(),
+        "apply_results": result.get("results"),
+        "site_path": site_path.name,
+    }
+    if req.get("error"):
+        shipped_fields["error"] = ""  # clear prior error if re-applied from in_progress
+    updated = _update_request_fields(rid, shipped_fields)
+
+    return {
+        "applied": True,
+        "id": rid,
+        "status": "shipped",
+        "business_slug": slug,
+        "summary": req.get("summary"),
+        "site_file": site_path.name,
+        "changed": bool(change_summary.get("changed")),
+        "applied_count": result.get("applied", 0),
+        "skipped_count": result.get("skipped", 0),
+        "item_results": result.get("results"),
+        "before_after": change_summary,
+        "request": updated,
+        "note": (
+            "HTML updated on disk under generated-sites; GitHub PR open is deferred "
+            "to a later agent/slice."
+        ),
+    }
+
+
+def mark_request_shipped(request_id: str, note: str = "") -> dict[str, Any]:
+    """Manually mark a request shipped (e.g. after external PR merge)."""
+    rid = (request_id or "").strip()
+    if not rid:
+        return {"shipped": False, "error": "id is required"}
+    loaded = get_change_request(rid)
+    if not loaded.get("found"):
+        return {
+            "shipped": False,
+            "error": loaded.get("error") or f"no change request with id {rid!r}",
+        }
+    req = loaded["request"]
+    status = str(req.get("status") or "").lower()
+    if status == "shipped":
+        return {
+            "shipped": True,
+            "already_shipped": True,
+            "id": rid,
+            "status": "shipped",
+        }
+    if status in TERMINAL_STATUSES:
+        return {
+            "shipped": False,
+            "id": rid,
+            "status": status,
+            "error": f"request {rid} is {status} and cannot be marked shipped",
+        }
+    fields: dict[str, Any] = {
+        "status": "shipped",
+        "shipped_at": _now_iso(),
+    }
+    if note:
+        fields["ship_note"] = str(note)
+    updated = _update_request_fields(rid, fields)
+    return {
+        "shipped": True,
+        "id": rid,
+        "status": "shipped",
+        "business_slug": updated.get("business_slug") if updated else req.get("business_slug"),
+        "request": updated,
+    }

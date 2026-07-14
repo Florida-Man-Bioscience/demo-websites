@@ -33,10 +33,13 @@ from knowledge import (
     search_business_knowledge as knowledge_search,
 )
 from changerequests import (
+    apply_change_request as apply_change_request_sync,
     cancel_change_request as cancel_change_request_sync,
     create_change_request as create_change_request_sync,
+    get_change_request as get_change_request_sync,
     get_site_outline as get_site_outline_sync,
     list_open_change_requests as list_open_change_requests_sync,
+    mark_request_shipped as mark_request_shipped_sync,
 )
 from events import (
     get_event as get_event_sync,
@@ -438,6 +441,62 @@ async def get_site_outline(slug: str) -> dict:
     Use before capturing change requests so you know current sections/hours/CTAs.
     """
     return await anyio.to_thread.run_sync(_get_site_outline_tool_sync, slug)
+
+
+def _get_change_request_sync(request_id: str) -> dict:
+    try:
+        return get_change_request_sync(request_id)
+    except Exception as e:
+        logger.exception("tool %s failed", "get_change_request")
+        return {"found": False, "error": _unavailable(e)}
+
+
+@mcp.tool()
+async def get_change_request(request_id: str) -> dict:
+    """Load one ChangeRequest by id (any status)."""
+    return await anyio.to_thread.run_sync(_get_change_request_sync, request_id)
+
+
+def _apply_change_request_tool_sync(request_id: str) -> dict:
+    try:
+        return apply_change_request_sync(request_id)
+    except Exception as e:
+        logger.exception("tool %s failed", "apply_change_request")
+        return {"applied": False, "error": _unavailable(e)}
+
+
+@mcp.tool()
+async def apply_change_request(request_id: str) -> dict:
+    """Apply a pending/approved ChangeRequest to generated-sites/<slug>.html.
+
+    MVP supports structured items: hours, phone, address, copy (before→after
+    or section heuristics). Updates status pending|approved → in_progress →
+    shipped|failed. Writes HTML locally only — does NOT open a GitHub PR
+    (deferred to a later slice). Returns before/after summary.
+    """
+    return await anyio.to_thread.run_sync(
+        _apply_change_request_tool_sync, request_id
+    )
+
+
+def _mark_request_shipped_sync(request_id: str, note: str = "") -> dict:
+    try:
+        return mark_request_shipped_sync(request_id, note=note)
+    except Exception as e:
+        logger.exception("tool %s failed", "mark_request_shipped")
+        return {"shipped": False, "error": _unavailable(e)}
+
+
+@mcp.tool()
+async def mark_request_shipped(request_id: str, note: str = "") -> dict:
+    """Manually mark a ChangeRequest shipped (e.g. after an external PR merge).
+
+    Prefer apply_change_request for structured HTML edits; use this when the
+    site was updated outside this tool.
+    """
+    return await anyio.to_thread.run_sync(
+        functools.partial(_mark_request_shipped_sync, request_id, note)
+    )
 
 
 def _search_events_sync(
